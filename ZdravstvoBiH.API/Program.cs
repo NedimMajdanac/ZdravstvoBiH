@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Zdravstvo.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ZdravstvoContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("Default"),
+        b => b.MigrationsAssembly("Zdravstvo.Infrastructure")
+        )
+    );
 
 var app = builder.Build();
 
