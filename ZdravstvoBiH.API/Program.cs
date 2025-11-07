@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddDbContext<ZdravstvoContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("Default"),
