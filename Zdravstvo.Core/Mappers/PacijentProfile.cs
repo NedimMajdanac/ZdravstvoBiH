@@ -13,9 +13,9 @@ namespace Zdravstvo.Core.Mappers
     {
         public PacijentProfile()
         {
-            CreateMap<Pacijent, PacijentDTO.ReadPacijentDTO>();
-            CreateMap<PacijentDTO.UpdatePacijentDTO, Pacijent>();
-            CreateMap<PacijentDTO.CreatePacijentDTO, Pacijent>();
+            CreateMap<Pacijent, PacijentDTO.ReadPacijentDTO>().ReverseMap();
+            CreateMap<PacijentDTO.UpdatePacijentDTO, Pacijent>().ReverseMap();
+            CreateMap<PacijentDTO.CreatePacijentDTO, Pacijent>().ReverseMap();
         }
     }
 }

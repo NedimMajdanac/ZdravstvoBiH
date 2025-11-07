@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Data;
+using Zdravstvo.Infrastructure.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddScoped<IPacijentService, PacijentService>();
 
 builder.Services.AddDbContext<ZdravstvoContext>(options =>
     options.UseSqlServer(
