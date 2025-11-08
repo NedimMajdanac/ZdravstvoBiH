@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IPacijentService, PacijentService>();
+builder.Services.AddScoped<ValidationService>();
 
 builder.Services.AddDbContext<ZdravstvoContext>(options =>
     options.UseSqlServer(

@@ -16,11 +16,13 @@ namespace Zdravstvo.Infrastructure.Service
     {
         private readonly ZdravstvoContext _db;
         private readonly IMapper _mapper;
+        private readonly ValidationService _validationService;
 
-        public PacijentService(ZdravstvoContext db, IMapper mapper)
+        public PacijentService(ZdravstvoContext db, IMapper mapper, ValidationService validationService)
         {
             _db = db;
             _mapper = mapper;
+            _validationService = validationService;
         }
 
         // Get all pacijenti
@@ -41,7 +43,13 @@ namespace Zdravstvo.Infrastructure.Service
         // Create new pacijent
         public async Task<PacijentDTO.ReadPacijentDTO> CreatePacijent(PacijentDTO.CreatePacijentDTO createPacijentDTO)
         {
+            await _validationService.ValidatePacijentEmail(createPacijentDTO.Email);
+            await _validationService.ValidatePacijentTelefon(createPacijentDTO.BrojTelefona);    
+            await _validationService.ValidatePacijentJMBG(createPacijentDTO.JMBG);
+
+
             var pacijent = _mapper.Map<Pacijent>(createPacijentDTO);
+
             _db.Pacijenti.Add(pacijent);
 
             await _db.SaveChangesAsync();   
@@ -52,6 +60,10 @@ namespace Zdravstvo.Infrastructure.Service
         // Update pacijent
         public async Task<PacijentDTO.ReadPacijentDTO> UpdatePacijent(int id, PacijentDTO.UpdatePacijentDTO updatePacijentDTO)
         {
+
+            await _validationService.ValidatePacijentTelefon(updatePacijentDTO.BrojTelefona);
+            await _validationService.ValidatePacijentEmail(updatePacijentDTO.Email);
+
             var pacijent = await _db.Pacijenti.FindAsync(id);
             if (pacijent == null) throw new Exception("Pacijent ne postoji");
 
@@ -60,5 +72,11 @@ namespace Zdravstvo.Infrastructure.Service
 
             return _mapper.Map<PacijentDTO.ReadPacijentDTO>(pacijent);
         }
+
+        // Search pacijenti by ime, prezime or jmbg
+        // Registacija novih pacijenata
+        // Login funkcionalnost
+        // Brisanje pacijenata
+
     }
 }
