@@ -35,9 +35,7 @@ namespace Zdravstvo.Core.DTOs
             public string Ime { get; set; }
             public string Prezime { get; set; }
             public string KontaktTelefon { get; set; }
-            public string Email { get; set; } // generisati email
             public string Specijalizacija { get; set; } // ako je ima
-            public string BrojLicence { get; set; } // generisati broj licence
             public int UstanovaId { get; set; } // dodjeljivanje ustanove pri kreiranju doktora
         }
     }

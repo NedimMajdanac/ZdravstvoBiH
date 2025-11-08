@@ -48,5 +48,7 @@ namespace Zdravstvo.Infrastructure.Service
             if (exists)
                 throw new ArgumentException("Pacijent sa unesenim JMBG-om već postoji");
         }
+
+        
     }
 }

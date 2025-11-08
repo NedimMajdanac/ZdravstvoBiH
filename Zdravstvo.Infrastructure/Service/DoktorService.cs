@@ -10,6 +10,7 @@ using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Entities;
 using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Data;
+using Zdravstvo.Infrastructure.Helpers;
 
 namespace Zdravstvo.Infrastructure.Service
 {
@@ -24,6 +25,20 @@ namespace Zdravstvo.Infrastructure.Service
             _db = db;
             _mapper = mapper;
             _validationService = validationService;
+        }
+
+        // Generate unique email
+        public async Task<string> GenerateUniqueEmail(string ime, string prezime)
+        {
+            var baseEmail = DoktorHelper.GenerateEmail(ime, prezime);
+            var uniqueEmail = baseEmail;
+            int counter = 1;
+
+            while (await _db.Doktori.AnyAsync(x => x.Email == uniqueEmail))
+            {
+                uniqueEmail = $"{ime.ToLower()}.{prezime.ToLower()}{counter++}@zdravstvo.com.ba";
+            }
+            return uniqueEmail;
         }
 
         // Get All Doktori
@@ -47,6 +62,10 @@ namespace Zdravstvo.Infrastructure.Service
         {
             var doktor = _mapper.Map<Doktor>(createDoktorDTO);
 
+            doktor.Email = GenerateUniqueEmail(doktor.Ime, doktor.Prezime).Result;
+
+            doktor.BrojLicence = DoktorHelper.GenerateBrojLicence();
+
             _db.Doktori.Add(doktor);
 
             await _db.SaveChangesAsync();
@@ -59,6 +78,8 @@ namespace Zdravstvo.Infrastructure.Service
         {
             var doktor = await _db.Doktori.FindAsync(id);
             if (doktor == null) return null;
+
+            
             
             _mapper.Map(updateDoktorDTO, doktor);
 
