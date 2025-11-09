@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -49,6 +50,19 @@ namespace Zdravstvo.Infrastructure.Service
                 throw new ArgumentException("Pacijent sa unesenim JMBG-om već postoji");
         }
 
+        public async Task ValidateUstanove(string adresa, string tip)
+        {
+            bool exists = await _db.Ustanove.AnyAsync(x => x.Adresa == adresa && x.Tip == tip);
+            if (exists)
+                throw new ArgumentException("Ustanova sa unesenom adresom i tipom već postoji");
+        }
         
+        public async Task ValidateBrojTelefonaUstanove(string brojTelefona)
+        {
+           
+            bool exists = await _db.Ustanove.AnyAsync(x => x.Telefon == brojTelefona);
+            if (exists)
+                throw new ArgumentException("Uneseni broj telefona je zauzet");
+        }
     }
 }
