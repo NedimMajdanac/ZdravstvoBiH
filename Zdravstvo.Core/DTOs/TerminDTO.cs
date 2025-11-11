@@ -28,7 +28,7 @@ namespace Zdravstvo.Core.DTOs
 
         public class CreateTerminDTO
         {
-            public string Status { get; set; } // generisati status "Zakazan" pri kreiranju preko servisa
+            //public string Status { get; set; } // generisati status "Zakazan" pri kreiranju preko servisa
             public DateTime DatumVreme { get; set; }
             public bool Uputnica { get; set; } // Ukoliko je doktor izdao uputnicu za termin, true ako doktor ima specijalizaciju
             public int DoktorId { get; set; } // Doktor kod kojeg se zakazuje termin

@@ -64,5 +64,7 @@ namespace Zdravstvo.Infrastructure.Service
             if (exists)
                 throw new ArgumentException("Uneseni broj telefona je zauzet");
         }
+
+       
     }
 }
