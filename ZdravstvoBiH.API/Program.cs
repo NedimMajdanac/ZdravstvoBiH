@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Data;
 using Zdravstvo.Infrastructure.Service;
+using ZdravstvoBiH.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddDbContext<ZdravstvoContext>(options =>
     );
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
