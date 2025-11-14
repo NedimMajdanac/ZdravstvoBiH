@@ -6,29 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Zdravstvo.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Pacijenti",
+                name: "Korisnici",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Ime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Prezime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    JMBG = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BrojTelefona = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatumRodjenja = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Adresa = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Spol = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pacijenti", x => x.Id);
+                    table.PrimaryKey("PK_Korisnici", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,6 +44,33 @@ namespace Zdravstvo.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Pacijenti",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Prezime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JMBG = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BrojTelefona = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DatumRodjenja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Adresa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Spol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    KorisnikId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pacijenti", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pacijenti_Korisnici_KorisnikId",
+                        column: x => x.KorisnikId,
+                        principalTable: "Korisnici",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Doktori",
                 columns: table => new
                 {
@@ -60,11 +82,18 @@ namespace Zdravstvo.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Specijalizacija = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BrojLicence = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UstanovaId = table.Column<int>(type: "int", nullable: false)
+                    UstanovaId = table.Column<int>(type: "int", nullable: false),
+                    KorisnikId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doktori", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Doktori_Korisnici_KorisnikId",
+                        column: x => x.KorisnikId,
+                        principalTable: "Korisnici",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Doktori_Ustanove_UstanovaId",
                         column: x => x.UstanovaId,
@@ -111,9 +140,21 @@ namespace Zdravstvo.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Doktori_KorisnikId",
+                table: "Doktori",
+                column: "KorisnikId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Doktori_UstanovaId",
                 table: "Doktori",
                 column: "UstanovaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pacijenti_KorisnikId",
+                table: "Pacijenti",
+                column: "KorisnikId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Termini_DoktorId",
@@ -145,6 +186,9 @@ namespace Zdravstvo.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ustanove");
+
+            migrationBuilder.DropTable(
+                name: "Korisnici");
         }
     }
 }

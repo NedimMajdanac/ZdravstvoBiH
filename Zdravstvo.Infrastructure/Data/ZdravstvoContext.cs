@@ -38,6 +38,18 @@ namespace Zdravstvo.Infrastructure.Data
                 .WithMany(p => p.Termini)
                 .HasForeignKey(t => t.PacijentId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Korisnik>()
+                .HasOne(k => k.Doktor)
+                .WithOne(d => d.Korisnik)
+                .HasForeignKey<Doktor>(d => d.KorisnikId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Korisnik>()
+                .HasOne(k => k.Pacijent)
+                .WithOne(p => p.Korisnik)
+                .HasForeignKey<Pacijent>(p => p.KorisnikId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
 
@@ -45,5 +57,6 @@ namespace Zdravstvo.Infrastructure.Data
         public DbSet<Doktor> Doktori { get; set; }
         public DbSet<Ustanova> Ustanove { get; set; }
         public DbSet<Termin> Termini { get; set; }
-    }
+        public DbSet<Korisnik> Korisnici { get; set; }
+        }
 }

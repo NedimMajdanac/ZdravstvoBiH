@@ -50,8 +50,18 @@ namespace Zdravstvo.Infrastructure.Service
 
             var pacijent = _mapper.Map<Pacijent>(createPacijentDTO);
 
-            _db.Pacijenti.Add(pacijent);
+            var korisnik = new Korisnik
+            {
+                Email = pacijent.Email,
+                PasswordHash = "hash123",
+                Role = "Pacijent"
+            };
+            _db.Korisnici.Add(korisnik);
+            await _db.SaveChangesAsync();
 
+            pacijent.KorisnikId = korisnik.Id;
+
+            _db.Pacijenti.Add(pacijent);
             await _db.SaveChangesAsync();   
 
             return _mapper.Map<PacijentDTO.ReadPacijentDTO>(pacijent);

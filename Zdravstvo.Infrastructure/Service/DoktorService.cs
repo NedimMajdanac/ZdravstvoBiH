@@ -63,8 +63,18 @@ namespace Zdravstvo.Infrastructure.Service
             var doktor = _mapper.Map<Doktor>(createDoktorDTO);
 
             doktor.Email = GenerateUniqueEmail(doktor.Ime, doktor.Prezime).Result;
+            var korisnik = new Korisnik
+            {
+                Email = doktor.Email,
+                PasswordHash = "123456",
+                Role = "Doktor"
+            };
+            _db.Korisnici.Add(korisnik);
+            await _db.SaveChangesAsync();
 
             doktor.BrojLicence = DoktorHelper.GenerateBrojLicence();
+
+            doktor.KorisnikId = korisnik.Id;    
 
             _db.Doktori.Add(doktor);
 

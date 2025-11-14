@@ -19,6 +19,9 @@ namespace Zdravstvo.Core.Entities
         public int UstanovaId { get; set; }
         public Ustanova Ustanova { get; set; }
 
+        public int KorisnikId { get; set; }
+        public Korisnik Korisnik { get; set; }
+
         //public ICollection<Nalaz> Nalazi { get; set; }
         public ICollection<Termin> Termini { get; set; }
     }

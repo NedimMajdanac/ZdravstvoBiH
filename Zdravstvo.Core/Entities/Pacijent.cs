@@ -18,6 +18,9 @@ namespace Zdravstvo.Core.Entities
         public string Adresa { get; set; }
         public string Spol { get; set; }
 
+        public int KorisnikId { get; set; }
+        public Korisnik Korisnik { get; set; }
+
         public ICollection<Termin> Termini { get; set; } = new List<Termin>();
         //public ICollection<Nalaz> Nalazi { get; set; } = new List<Nalaz>();
         //public ICollection<Terapija> Teraoije { get; set; } = new List<Terpaija>();

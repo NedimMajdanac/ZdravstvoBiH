@@ -46,6 +46,9 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("KorisnikId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -59,9 +62,37 @@ namespace Zdravstvo.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("KorisnikId")
+                        .IsUnique();
+
                     b.HasIndex("UstanovaId");
 
                     b.ToTable("Doktori");
+                });
+
+            modelBuilder.Entity("Zdravstvo.Core.Entities.Korisnik", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Korisnici");
                 });
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Pacijent", b =>
@@ -95,6 +126,9 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("KorisnikId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -104,6 +138,9 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KorisnikId")
+                        .IsUnique();
 
                     b.ToTable("Pacijenti");
                 });
@@ -185,13 +222,32 @@ namespace Zdravstvo.Infrastructure.Migrations
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Doktor", b =>
                 {
+                    b.HasOne("Zdravstvo.Core.Entities.Korisnik", "Korisnik")
+                        .WithOne("Doktor")
+                        .HasForeignKey("Zdravstvo.Core.Entities.Doktor", "KorisnikId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Zdravstvo.Core.Entities.Ustanova", "Ustanova")
                         .WithMany("Doktori")
                         .HasForeignKey("UstanovaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Korisnik");
+
                     b.Navigation("Ustanova");
+                });
+
+            modelBuilder.Entity("Zdravstvo.Core.Entities.Pacijent", b =>
+                {
+                    b.HasOne("Zdravstvo.Core.Entities.Korisnik", "Korisnik")
+                        .WithOne("Pacijent")
+                        .HasForeignKey("Zdravstvo.Core.Entities.Pacijent", "KorisnikId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Korisnik");
                 });
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Termin", b =>
@@ -224,6 +280,15 @@ namespace Zdravstvo.Infrastructure.Migrations
             modelBuilder.Entity("Zdravstvo.Core.Entities.Doktor", b =>
                 {
                     b.Navigation("Termini");
+                });
+
+            modelBuilder.Entity("Zdravstvo.Core.Entities.Korisnik", b =>
+                {
+                    b.Navigation("Doktor")
+                        .IsRequired();
+
+                    b.Navigation("Pacijent")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Pacijent", b =>
