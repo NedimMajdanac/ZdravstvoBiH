@@ -51,8 +51,13 @@ namespace Zdravstvo.Infrastructure.Data
                 context.Termini.AddRange(termin1, termin2);
                 context.SaveChanges();
 
+                // Medicinski karton
+                var karton1 = new MedicinskiKarton { Alergije="Nema", Vakcinacija="Covid,2019", KrvnaGrupa="A+", HronicneBolesti="Nema", Operacije="Nema", PorodicnaAnamneza="Nema", Terapije="Penicilin 200mg", Napomena="", Pacijent=pacijent1 };
+                var karton2 = new MedicinskiKarton { Alergije="Nema", Vakcinacija="Covid,2019", KrvnaGrupa="A+", HronicneBolesti="Nema", Operacije="Nema", PorodicnaAnamneza="Nema", Terapije="Penicilin 200mg", Napomena="", Pacijent=pacijent2 };
+                context.MedicinskiKartoni.AddRange(karton1, karton2);
+                context.SaveChanges();
 
-            }
+        }
         }
     }
 
