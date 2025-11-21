@@ -59,5 +59,6 @@ namespace Zdravstvo.Infrastructure.Data
         public DbSet<Termin> Termini { get; set; }
         public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<MedicinskiKarton> MedicinskiKartoni { get; set; }
+        public DbSet<Dijagnoze> Dijagnoze { get; set; }
         }
 }
