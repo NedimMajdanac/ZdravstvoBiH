@@ -15,7 +15,7 @@ namespace Zdravstvo.Core.Entities
         public string Tip { get; set; }
         public string Telefon { get; set; }
 
-        public ICollection<Doktor> Doktori { get; set; }
-        public ICollection<Termin> Termini { get; set; }
+        public ICollection<Doktor> Doktori { get; set; } // Ustanova moze imati vise doktora, Doktori koji rade u ustanovi
+        public ICollection<Termin> Termini { get; set; } // Termini koji se odrzavaju u ustanovi
     }
 }
