@@ -20,9 +20,10 @@ namespace Zdravstvo.Core.Entities
 
         public int KorisnikId { get; set; }
         public Korisnik Korisnik { get; set; }
+        public int MedicinskiKartonId { get; set; }
+        public MedicinskiKarton MedicinskiKarton { get; set; }
 
         public ICollection<Termin> Termini { get; set; } = new List<Termin>();
-        //public ICollection<Nalaz> Nalazi { get; set; } = new List<Nalaz>();
-        //public ICollection<Terapija> Teraoije { get; set; } = new List<Terpaija>();
+    
     }
 }

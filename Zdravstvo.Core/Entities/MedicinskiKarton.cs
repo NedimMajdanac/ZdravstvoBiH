@@ -18,7 +18,6 @@ namespace Zdravstvo.Core.Entities
         public string Terapije { get; set; } // "Metformin 500mg dnevno, Lisinopril 10mg dnevno"
         public string Napomena { get; set; } // "Pacijent treba redovne kontrole"
 
-        public int PacijentId { get; set; }
-        public Pacijent Pacijent { get; set; }
+       
     }
 }

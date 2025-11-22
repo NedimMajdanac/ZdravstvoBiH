@@ -12,7 +12,7 @@ using Zdravstvo.Infrastructure.Data;
 namespace Zdravstvo.Infrastructure.Migrations
 {
     [DbContext(typeof(ZdravstvoContext))]
-    [Migration("20251122151132_InitialCreate")]
+    [Migration("20251122193831_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -157,9 +157,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PacijentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PorodicnaAnamneza")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -173,8 +170,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PacijentId");
 
                     b.ToTable("MedicinskiKartoni");
                 });
@@ -213,6 +208,9 @@ namespace Zdravstvo.Infrastructure.Migrations
                     b.Property<int>("KorisnikId")
                         .HasColumnType("int");
 
+                    b.Property<int>("MedicinskiKartonId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -225,6 +223,8 @@ namespace Zdravstvo.Infrastructure.Migrations
 
                     b.HasIndex("KorisnikId")
                         .IsUnique();
+
+                    b.HasIndex("MedicinskiKartonId");
 
                     b.ToTable("Pacijenti");
                 });
@@ -346,8 +346,8 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Uputnica")
-                        .HasColumnType("bit");
+                    b.Property<int?>("UputnicaId")
+                        .HasColumnType("int");
 
                     b.Property<int>("UstanovaId")
                         .HasColumnType("int");
@@ -358,9 +358,52 @@ namespace Zdravstvo.Infrastructure.Migrations
 
                     b.HasIndex("PacijentId");
 
+                    b.HasIndex("UputnicaId");
+
                     b.HasIndex("UstanovaId");
 
                     b.ToTable("Termini");
+                });
+
+            modelBuilder.Entity("Zdravstvo.Core.Entities.Uputnica", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DatumIzdavanja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatumKoristenja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoktorId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsKoristena")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PacijentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SifraUputnice")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SpecijalizacijaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoktorId");
+
+                    b.HasIndex("PacijentId");
+
+                    b.HasIndex("SpecijalizacijaId");
+
+                    b.ToTable("Uputnice");
                 });
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Ustanova", b =>
@@ -434,17 +477,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                     b.Navigation("Ustanova");
                 });
 
-            modelBuilder.Entity("Zdravstvo.Core.Entities.MedicinskiKarton", b =>
-                {
-                    b.HasOne("Zdravstvo.Core.Entities.Pacijent", "Pacijent")
-                        .WithMany()
-                        .HasForeignKey("PacijentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pacijent");
-                });
-
             modelBuilder.Entity("Zdravstvo.Core.Entities.Pacijent", b =>
                 {
                     b.HasOne("Zdravstvo.Core.Entities.Korisnik", "Korisnik")
@@ -453,7 +485,15 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Zdravstvo.Core.Entities.MedicinskiKarton", "MedicinskiKarton")
+                        .WithMany()
+                        .HasForeignKey("MedicinskiKartonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Korisnik");
+
+                    b.Navigation("MedicinskiKarton");
                 });
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Pregled", b =>
@@ -508,6 +548,10 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Zdravstvo.Core.Entities.Uputnica", "Uputnica")
+                        .WithMany()
+                        .HasForeignKey("UputnicaId");
+
                     b.HasOne("Zdravstvo.Core.Entities.Ustanova", "Ustanova")
                         .WithMany("Termini")
                         .HasForeignKey("UstanovaId")
@@ -518,7 +562,36 @@ namespace Zdravstvo.Infrastructure.Migrations
 
                     b.Navigation("Pacijent");
 
+                    b.Navigation("Uputnica");
+
                     b.Navigation("Ustanova");
+                });
+
+            modelBuilder.Entity("Zdravstvo.Core.Entities.Uputnica", b =>
+                {
+                    b.HasOne("Zdravstvo.Core.Entities.Doktor", "Doktor")
+                        .WithMany()
+                        .HasForeignKey("DoktorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Zdravstvo.Core.Entities.Pacijent", "Pacijent")
+                        .WithMany()
+                        .HasForeignKey("PacijentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Zdravstvo.Core.Entities.Specijalizacija", "Specijalizacija")
+                        .WithMany()
+                        .HasForeignKey("SpecijalizacijaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doktor");
+
+                    b.Navigation("Pacijent");
+
+                    b.Navigation("Specijalizacija");
                 });
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Doktor", b =>

@@ -154,9 +154,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PacijentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PorodicnaAnamneza")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -170,8 +167,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PacijentId");
 
                     b.ToTable("MedicinskiKartoni");
                 });
@@ -210,6 +205,9 @@ namespace Zdravstvo.Infrastructure.Migrations
                     b.Property<int>("KorisnikId")
                         .HasColumnType("int");
 
+                    b.Property<int>("MedicinskiKartonId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -222,6 +220,8 @@ namespace Zdravstvo.Infrastructure.Migrations
 
                     b.HasIndex("KorisnikId")
                         .IsUnique();
+
+                    b.HasIndex("MedicinskiKartonId");
 
                     b.ToTable("Pacijenti");
                 });
@@ -474,17 +474,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                     b.Navigation("Ustanova");
                 });
 
-            modelBuilder.Entity("Zdravstvo.Core.Entities.MedicinskiKarton", b =>
-                {
-                    b.HasOne("Zdravstvo.Core.Entities.Pacijent", "Pacijent")
-                        .WithMany()
-                        .HasForeignKey("PacijentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pacijent");
-                });
-
             modelBuilder.Entity("Zdravstvo.Core.Entities.Pacijent", b =>
                 {
                     b.HasOne("Zdravstvo.Core.Entities.Korisnik", "Korisnik")
@@ -493,7 +482,15 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Zdravstvo.Core.Entities.MedicinskiKarton", "MedicinskiKarton")
+                        .WithMany()
+                        .HasForeignKey("MedicinskiKartonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Korisnik");
+
+                    b.Navigation("MedicinskiKarton");
                 });
 
             modelBuilder.Entity("Zdravstvo.Core.Entities.Pregled", b =>

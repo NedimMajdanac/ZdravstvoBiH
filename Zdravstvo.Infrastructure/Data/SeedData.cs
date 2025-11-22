@@ -57,12 +57,16 @@ namespace Zdravstvo.Infrastructure.Data
                 var doktor2 = new Doktor { Ime = "Mujo", Prezime = "Mujic", KontaktTelefon = "061/123-854", Email = "mujo.mujic@zdrv.gov.ba", Ustanova = ustanova2, SpecijalizacijaId = specijalizacija.Id, BrojLicence = "zbr12CC03" ,KorisnikId=korisnikDoktor2.Id};
                 context.Doktori.AddRange(doktor1, doktor2);
                 context.SaveChanges();
-
-                // 3. Pacijenti
-                var pacijent1 = new Pacijent {  Ime = "Ibrahim", Prezime = "Ibric", JMBG = "1234567890123", Email = "Ibro12@gmail.com", Adresa = "Adresa 12", BrojTelefona = "061/987-654", DatumRodjenja = new DateTime(1990, 5, 15), Spol = "Muski", KorisnikId=korisnikPacijent1.Id };
-                var pacijent2 = new Pacijent {  Ime = "Sara", Prezime = "Saric", JMBG = "9876543210987", Email = "Saro@gmail.com", Adresa = "Adresa 34", BrojTelefona = "061/654-321", DatumRodjenja = new DateTime(1985, 8, 22), Spol = "Zenski" ,KorisnikId=korisnikPacijent2.Id};
-                context.Pacijenti.AddRange(pacijent1, pacijent2);
-                context.SaveChanges();
+            // Medicinski karton
+            var karton1 = new MedicinskiKarton { Alergije = "Nema", Vakcinacija = "Covid,2019", KrvnaGrupa = "A+", HronicneBolesti = "Nema", Operacije = "Nema", PorodicnaAnamneza = "Nema", Terapije = "Penicilin 200mg", Napomena = "" };
+            var karton2 = new MedicinskiKarton { Alergije = "Nema", Vakcinacija = "Covid,2019", KrvnaGrupa = "A+", HronicneBolesti = "Nema", Operacije = "Nema", PorodicnaAnamneza = "Nema", Terapije = "Penicilin 200mg", Napomena = "" };
+            context.MedicinskiKartoni.AddRange(karton1, karton2);
+            context.SaveChanges();
+            // 3. Pacijenti
+            var pacijent1 = new Pacijent {  Ime = "Ibrahim", Prezime = "Ibric", JMBG = "1234567890123", Email = "Ibro12@gmail.com", Adresa = "Adresa 12", BrojTelefona = "061/987-654", DatumRodjenja = new DateTime(1990, 5, 15), Spol = "Muski", KorisnikId=korisnikPacijent1.Id, MedicinskiKartonId=karton1.Id };
+            var pacijent2 = new Pacijent { Ime = "Sara", Prezime = "Saric", JMBG = "9876543210987", Email = "Saro@gmail.com", Adresa = "Adresa 34", BrojTelefona = "061/654-321", DatumRodjenja = new DateTime(1985, 8, 22), Spol = "Zenski", KorisnikId = korisnikPacijent2.Id, MedicinskiKartonId = karton2.Id };
+            context.Pacijenti.AddRange(pacijent1, pacijent2);
+            context.SaveChanges();
 
             var uputnica = new Uputnica
             {
@@ -83,11 +87,7 @@ namespace Zdravstvo.Infrastructure.Data
             context.SaveChanges();
 
             
-            // Medicinski karton
-            var karton1 = new MedicinskiKarton { Alergije="Nema", Vakcinacija="Covid,2019", KrvnaGrupa="A+", HronicneBolesti="Nema", Operacije="Nema", PorodicnaAnamneza="Nema", Terapije="Penicilin 200mg", Napomena="", Pacijent=pacijent1 };
-            var karton2 = new MedicinskiKarton { Alergije="Nema", Vakcinacija="Covid,2019", KrvnaGrupa="A+", HronicneBolesti="Nema", Operacije="Nema", PorodicnaAnamneza="Nema", Terapije="Penicilin 200mg", Napomena="", Pacijent=pacijent2 };
-            context.MedicinskiKartoni.AddRange(karton1, karton2);
-            context.SaveChanges();
+            
 
             var pregled = new Pregled
             {
