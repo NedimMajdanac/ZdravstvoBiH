@@ -5,7 +5,7 @@
 namespace Zdravstvo.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class testRun : Migration
+    public partial class Data : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -12,7 +12,8 @@ namespace Zdravstvo.Core.Entities
         public DateTime DatumVreme { get; set; }
         public string Status { get; set; } // npr. "Zakazan", "Otkazan", "Završen"
         public string Napomena { get; set; } = string.Empty;
-        public bool Uputnica { get; set; }
+        public int? UputnicaId { get; set; }
+        public Uputnica Uputnica { get; set; }
 
         // Relacije
         public int UstanovaId { get; set; }

@@ -50,15 +50,29 @@ namespace Zdravstvo.Infrastructure.Data
                 .WithOne(p => p.Korisnik)
                 .HasForeignKey<Pacijent>(p => p.KorisnikId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Specijalizacija>()
+                .HasIndex(s => s.Naziv)
+                .IsUnique();
+
+            modelBuilder.Entity<Uputnica>()
+                .HasOne(u => u.Specijalizacija)
+                .WithMany()
+                .HasForeignKey(u => u.SpecijalizacijaId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
-
+        
         public DbSet<Pacijent> Pacijenti { get; set; }
         public DbSet<Doktor> Doktori { get; set; }
         public DbSet<Ustanova> Ustanove { get; set; }
         public DbSet<Termin> Termini { get; set; }
         public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<MedicinskiKarton> MedicinskiKartoni { get; set; }
-        public DbSet<Dijagnoze> Dijagnoze { get; set; }
+        public DbSet<Pregled> Pregledi { get; set; }
+        public DbSet<Dijagnoza> Dijagnoze { get; set; }
+        public DbSet<Recepti> Recepti { get; set; }
+        public DbSet<Specijalizacija> Specijalizacija { get; set; }
+        public DbSet<Uputnica> Uputnice { get; set; }
         }
 }

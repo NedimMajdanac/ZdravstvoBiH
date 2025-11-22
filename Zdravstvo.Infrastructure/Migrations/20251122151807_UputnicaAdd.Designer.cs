@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zdravstvo.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Zdravstvo.Infrastructure.Data;
 namespace Zdravstvo.Infrastructure.Migrations
 {
     [DbContext(typeof(ZdravstvoContext))]
-    partial class ZdravstvoContextModelSnapshot : ModelSnapshot
+    [Migration("20251122151807_UputnicaAdd")]
+    partial class UputnicaAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -343,8 +346,8 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UputnicaId")
-                        .HasColumnType("int");
+                    b.Property<bool>("Uputnica")
+                        .HasColumnType("bit");
 
                     b.Property<int>("UstanovaId")
                         .HasColumnType("int");
@@ -354,8 +357,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                     b.HasIndex("DoktorId");
 
                     b.HasIndex("PacijentId");
-
-                    b.HasIndex("UputnicaId");
 
                     b.HasIndex("UstanovaId");
 
@@ -548,10 +549,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Zdravstvo.Core.Entities.Uputnica", "Uputnica")
-                        .WithMany()
-                        .HasForeignKey("UputnicaId");
-
                     b.HasOne("Zdravstvo.Core.Entities.Ustanova", "Ustanova")
                         .WithMany("Termini")
                         .HasForeignKey("UstanovaId")
@@ -561,8 +558,6 @@ namespace Zdravstvo.Infrastructure.Migrations
                     b.Navigation("Doktor");
 
                     b.Navigation("Pacijent");
-
-                    b.Navigation("Uputnica");
 
                     b.Navigation("Ustanova");
                 });
