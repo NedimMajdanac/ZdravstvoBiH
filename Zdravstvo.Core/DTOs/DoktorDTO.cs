@@ -17,8 +17,8 @@ namespace Zdravstvo.Core.DTOs
             public string KontaktTelefon { get; set; }
             public string Email { get; set; }
             public string BrojLicence { get; set; }
-            public Ustanova Ustanove { get; set; }  // pregled admina za ustanove u kojem radi doktor
-            public Specijalizacija Specijalizacija { get; set; } // pregled specijalizacije ako je ima
+            public int SpecijalizacijaId { get; set; }
+            public int UstanovaId { get; set; }
         }
 
         public class UpdateDoktorDTO

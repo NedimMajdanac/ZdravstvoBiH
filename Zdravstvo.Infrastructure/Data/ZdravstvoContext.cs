@@ -60,9 +60,15 @@ namespace Zdravstvo.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(u => u.SpecijalizacijaId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Pacijent>()
+                .HasOne(p => p.MedicinskiKarton)
+                .WithOne()
+                .HasForeignKey<Pacijent>(p => p.MedicinskiKartonId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
-        
+
         public DbSet<Pacijent> Pacijenti { get; set; }
         public DbSet<Doktor> Doktori { get; set; }
         public DbSet<Ustanova> Ustanove { get; set; }

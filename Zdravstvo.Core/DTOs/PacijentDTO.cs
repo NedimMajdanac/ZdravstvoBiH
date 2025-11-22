@@ -20,8 +20,7 @@ namespace Zdravstvo.Core.DTOs
             public DateTime DatumRodjenja { get; set; }
             public string JMBG { get; set; }
 
-            // Medicinski podaci mogu biti dodani ovdje kasnije
-
+            public int MedicinskiKartonId { get; set; }
         }
 
         public class CreatePacijentDTO
@@ -34,6 +33,7 @@ namespace Zdravstvo.Core.DTOs
             public DateTime DatumRodjenja { get; set; }
             public string JMBG { get; set; }
             public string Adresa { get; set; }
+            public int MedicinskiKartonId { get; set; }
         }
 
         public class UpdatePacijentDTO
