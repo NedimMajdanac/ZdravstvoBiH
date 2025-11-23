@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Data;
 using Zdravstvo.Infrastructure.Service;
@@ -15,11 +18,28 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
+
 builder.Services.AddScoped<IPacijentService, PacijentService>();
 builder.Services.AddScoped<IDoktorService, DoktorService>();
 builder.Services.AddScoped<IUstanovaService, UstanovaService>();
 builder.Services.AddScoped<ITerminService, TerminService>();
 builder.Services.AddScoped<IMedicinskiKartonService, MedicinskiKartonService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ValidationService>();
 
 builder.Services.AddDbContext<ZdravstvoContext>(options =>
@@ -49,6 +69,8 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseAuthentication();
 
 app.MapControllers();
 
