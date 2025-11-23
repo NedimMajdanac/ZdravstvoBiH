@@ -77,6 +77,11 @@ namespace Zdravstvo.Infrastructure.Service
             }
         }
 
-       
+       public async Task ValidateSifruUputnice(string sifraUputnice)
+        {
+            bool exists = await _db.Uputnice.AnyAsync(x => x.SifraUputnice == sifraUputnice);
+            if (exists)
+                throw new ArgumentException("Unesena šifra uputnice već postoji");
+       }
     }
 }

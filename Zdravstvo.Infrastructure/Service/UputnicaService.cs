@@ -16,11 +16,30 @@ namespace Zdravstvo.Infrastructure.Service
     {
         private readonly IMapper _mapper;
         private readonly ZdravstvoContext _db;
-        
-        public UputnicaService(IMapper mapper,ZdravstvoContext db)
+        private readonly ValidationService _validationService;
+
+        public UputnicaService(IMapper mapper,ZdravstvoContext db, ValidationService validationService)
         {
             _db = db;
             _mapper = mapper;
+            _validationService = validationService;
+        }
+
+        // Generisi Sifru Uputnice
+        public string GenerisiSifruUputnice()
+        {
+            var datePart = DateTime.Now.ToString("ddMMyy");
+            var random = new Random();
+            var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var digits = "0123456789";
+            var letterPart = new char[2];
+            var digitPart = new char[2];
+            for (int i = 0; i < 2; i++)
+            {
+                letterPart[i] = letters[random.Next(letters.Length)];
+                digitPart[i] = digits[random.Next(digits.Length)];
+            }
+            return $"UP-{datePart}-{new string(letterPart)}{new string(digitPart)}";
         }
 
         // Get All Uputnice
@@ -40,7 +59,14 @@ namespace Zdravstvo.Infrastructure.Service
         // Create Uputnica
         public async Task<UputnicaDTO.ReadUputnicaDTO> CreateUputnica(UputnicaDTO.CreateUputnicaDTO createUputnicaDTO)
         {
+            
+
             var uputnica = _mapper.Map<Uputnica>(createUputnicaDTO);
+            
+            uputnica.SifraUputnice = GenerisiSifruUputnice();
+            uputnica.IsKoristena = false;
+            uputnica.DatumKoristenja = null;
+
             _db.Uputnice.Add(uputnica);
             await _db.SaveChangesAsync();
             return _mapper.Map<UputnicaDTO.ReadUputnicaDTO>(uputnica);
