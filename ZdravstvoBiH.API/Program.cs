@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Zdravstvo.Core.Entities;
 using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Data;
 using Zdravstvo.Infrastructure.Service;

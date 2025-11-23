@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -60,15 +61,19 @@ namespace Zdravstvo.Infrastructure.Service
         // Update Doktor
         public async Task<DoktorDTO.ReadDoktorDTO> CreateDoktor(DoktorDTO.CreateDoktorDTO createDoktorDTO)
         {
+
             var doktor = _mapper.Map<Doktor>(createDoktorDTO);
 
-            doktor.Email = GenerateUniqueEmail(doktor.Ime, doktor.Prezime).Result;
+            string email = doktor.Email = GenerateUniqueEmail(doktor.Ime, doktor.Prezime).Result;
+
+            string password = "DefaultPassword123!"; // Default password, should be changed on first login
+            
             var korisnik = new Korisnik
             {
-                Email = doktor.Email,
-                PasswordHash = "123456",
+                Email = email,
                 Role = "Doktor"
             };
+            korisnik.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
             _db.Korisnici.Add(korisnik);
             await _db.SaveChangesAsync();
 

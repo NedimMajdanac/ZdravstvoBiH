@@ -43,6 +43,14 @@ namespace Zdravstvo.Infrastructure.Service
         // Create new pacijent
         public async Task<PacijentDTO.ReadPacijentDTO> CreatePacijent(PacijentDTO.CreatePacijentDTO createPacijentDTO)
         {
+            var korisnik = await _db.Korisnici.FirstOrDefaultAsync(x => x.Email == createPacijentDTO.Email && x.Role=="Pacijent");
+
+            if (korisnik == null)
+                throw new Exception("Korisnik sa tim ID ne postoji");
+
+            if (korisnik.Role != "Pacijent")
+                throw new Exception("Korisnik nije registrovan kao pacijent");
+
             await _validationService.ValidatePacijentEmail(createPacijentDTO.Email);
             await _validationService.ValidatePacijentTelefon(createPacijentDTO.BrojTelefona);    
             await _validationService.ValidatePacijentJMBG(createPacijentDTO.JMBG);
@@ -50,14 +58,6 @@ namespace Zdravstvo.Infrastructure.Service
 
             var pacijent = _mapper.Map<Pacijent>(createPacijentDTO);
 
-            var korisnik = new Korisnik
-            {
-                Email = pacijent.Email,
-                PasswordHash = "hash123",
-                Role = "Pacijent"
-            };
-            _db.Korisnici.Add(korisnik);
-            await _db.SaveChangesAsync();
 
             pacijent.KorisnikId = korisnik.Id;
 
