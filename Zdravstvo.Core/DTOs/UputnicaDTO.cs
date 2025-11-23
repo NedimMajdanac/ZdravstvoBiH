@@ -11,7 +11,7 @@ namespace Zdravstvo.Core.DTOs
     {
         public class ReadUputnicaDTO
         {
-
+            public int Id { get; set; }
             public int PacijentId { get; set; }
             public int DoktorId { get; set; } // Doktor koji je izdao uputnicu
             public int SpecijalizacijaId { get; set; } // Specijalizacija na koju je uputnica izdata
