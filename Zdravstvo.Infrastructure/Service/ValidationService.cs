@@ -65,6 +65,18 @@ namespace Zdravstvo.Infrastructure.Service
                 throw new ArgumentException("Uneseni broj telefona je zauzet");
         }
 
+        public async Task ValidateKrvnaGrupa(string krvnaGrupa)
+        {
+            var validneKrvneGrupe = new List<string>
+            {
+                "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"
+            };
+            if (!validneKrvneGrupe.Contains(krvnaGrupa))
+            {
+                throw new ArgumentException("Unesena krvna grupa nije validna");
+            }
+        }
+
        
     }
 }

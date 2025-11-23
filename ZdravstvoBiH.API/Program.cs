@@ -19,6 +19,7 @@ builder.Services.AddScoped<IPacijentService, PacijentService>();
 builder.Services.AddScoped<IDoktorService, DoktorService>();
 builder.Services.AddScoped<IUstanovaService, UstanovaService>();
 builder.Services.AddScoped<ITerminService, TerminService>();
+builder.Services.AddScoped<IMedicinskiKartonService, MedicinskiKartonService>();
 builder.Services.AddScoped<ValidationService>();
 
 builder.Services.AddDbContext<ZdravstvoContext>(options =>
