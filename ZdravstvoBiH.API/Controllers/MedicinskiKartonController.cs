@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
 
@@ -21,6 +22,7 @@ namespace ZdravstvoBiH.API.Controllers
             var kartoni = await _medicinskiKartonService.GetAllMedKartoni();
             return Ok(kartoni);
         }
+        [Authorize(Roles = "Doktor")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMedicinskiKartonById(int id)
         {
@@ -31,12 +33,14 @@ namespace ZdravstvoBiH.API.Controllers
             }
             return Ok(karton);
         }
+        [Authorize(Roles = "Doctor")]
         [HttpPost]
         public async Task<IActionResult> CreateMedicinskiKarton([FromBody] MedicinskiKartonDTO.CreateMedicinskiKartonDTO createMedicinskiKarton)
         {
             var karton = await _medicinskiKartonService.CreateMedicinskiKarton(createMedicinskiKarton);
             return CreatedAtAction(nameof(GetMedicinskiKartonById), new { id = karton }, karton);
         }
+        [Authorize(Roles = "Doktor")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMedicinskiKarton(int id, [FromBody] MedicinskiKartonDTO.UpdateMedicinskiKartonDTO updateMedicinskiKarton)
         {
