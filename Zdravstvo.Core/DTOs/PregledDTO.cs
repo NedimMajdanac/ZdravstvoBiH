@@ -11,6 +11,7 @@ namespace Zdravstvo.Core.DTOs
     {
         public class ReadPregledDTO
         {
+            public int Id { get; set; }
             public DateTime DatumPregleda { get; set; }
             public string Misljenje { get; set; }
             public string Terapija { get; set; }
@@ -27,9 +28,9 @@ namespace Zdravstvo.Core.DTOs
             public string Terapija { get; set; }
             public string Napomene { get; set; }
 
-            public int TerminId { get; set; } // upisuje se po vremenskom terminu
-            public int DoktorId { get; set; } // Id od doktora kod kojeg je bio zakazan termin 
-            public int PacijentId { get; set; } 
+            //public int TerminId { get; set; } // upisuje se po vremenskom terminu
+            //public int DoktorId { get; set; } // Id od doktora kod kojeg je bio zakazan termin 
+            //public int PacijentId { get; set; } 
         }
         public class UpdatePregledDTO
         {
