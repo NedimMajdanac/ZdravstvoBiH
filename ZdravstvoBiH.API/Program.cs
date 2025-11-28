@@ -44,6 +44,7 @@ builder.Services.AddScoped<IMedicinskiKartonService, MedicinskiKartonService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUputnicaService, UputnicaService>();
 builder.Services.AddScoped<IPregledService,PregledService>();
+builder.Services.AddScoped<IDijagnozaService, DijagnozaService>();
 builder.Services.AddScoped<ValidationService>();
 
 builder.Services.AddDbContext<ZdravstvoContext>(options =>

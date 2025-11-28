@@ -66,6 +66,18 @@ namespace Zdravstvo.Infrastructure.Data
                 .WithOne()
                 .HasForeignKey<Pacijent>(p => p.MedicinskiKartonId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+           modelBuilder.Entity<Pregled>()
+                .HasOne(p => p.Dijagnoza)
+                .WithOne(d => d.Pregled)
+                .HasForeignKey<Dijagnoza>(d => d.PregledId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Dijagnoza>()
+                .HasIndex(d => d.PregledId)
+                .IsUnique();
+
         }
 
 

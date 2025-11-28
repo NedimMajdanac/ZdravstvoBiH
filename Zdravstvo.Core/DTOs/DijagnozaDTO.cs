@@ -11,6 +11,7 @@ namespace Zdravstvo.Core.DTOs
     {
         public class ReadDijagnozaDTO 
         {
+            public int Id { get; set; }
             public int PregledId { get; set; } // ID pregleda kojem dijagnoza pripada 
             public string Naziv { get; set; } 
             public string ICD10 { get; set; } // Medjunarodna klasifikacija bolesti :: generisati iz liste ili baze

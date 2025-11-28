@@ -20,5 +20,6 @@ namespace Zdravstvo.Core.Entities
         public Doktor Doktor { get; set; }
         public int PacijentId { get; set; }
         public Pacijent Pacijent { get; set; }
+        public Dijagnoza? Dijagnoza { get; set; }
     }
 }
