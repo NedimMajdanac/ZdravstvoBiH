@@ -11,7 +11,7 @@ namespace Zdravstvo.Core.Interfaces
     {
         Task<List<PregledDTO.ReadPregledDTO>> GetAllPregledi();
         Task<PregledDTO.ReadPregledDTO> GetPregledById(int id);
-        Task<PregledDTO.ReadPregledDTO> CreatePregled(PregledDTO.CreatePregledDTO createPregledDTO);
+        Task<PregledDTO.ReadPregledDTO> CreatePregledForTermin(int terminId, PregledDTO.CreatePregledDTO createPregledDTO, int requestingDoktorId);
         Task<PregledDTO.ReadPregledDTO> UpdatePregled(int id, PregledDTO.UpdatePregledDTO updatePregledDTO);
     }
 }

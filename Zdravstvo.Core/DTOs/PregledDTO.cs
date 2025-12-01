@@ -23,7 +23,7 @@ namespace Zdravstvo.Core.DTOs
         }
         public class CreatePregledDTO
         {
-            public DateTime DatumPregleda { get; set; }
+           // public DateTime DatumPregleda { get; set; }
             public string Misljenje { get; set; }
             public string Terapija { get; set; }
             public string Napomene { get; set; }

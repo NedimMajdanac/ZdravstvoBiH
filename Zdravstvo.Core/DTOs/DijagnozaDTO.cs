@@ -19,7 +19,7 @@ namespace Zdravstvo.Core.DTOs
         }
         public class CreateDijagnozaDTO
         {
-            public int PregledId { get; set; } // ID pregleda kojem dijagnoza pripada :: upisuje se prilikom kreiranja
+            //public int PregledId { get; set; } // ID pregleda kojem dijagnoza pripada :: upisuje se prilikom kreiranja
             public string Naziv { get; set; } 
             public string ICD10 { get; set; } // Medjunarodna klasifikacija bolesti :: generisati iz liste ili baze
             public string Napomene { get; set; }

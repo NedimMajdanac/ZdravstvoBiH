@@ -22,7 +22,7 @@ namespace Zdravstvo.Infrastructure.Service
     {
         private readonly ZdravstvoContext _db;
         private readonly IConfiguration _configuration;
-
+      
         public AuthService(ZdravstvoContext db, IConfiguration configuration)
         {
             _db = db;
@@ -74,6 +74,7 @@ namespace Zdravstvo.Infrastructure.Service
         {
             var jwtKey = _configuration["Jwt:Key"];
             var jwtIssuer = _configuration["Jwt:Issuer"];
+            var jwtAudience = _configuration["Jwt:Audience"];
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -85,9 +86,15 @@ namespace Zdravstvo.Infrastructure.Service
                 new Claim(ClaimTypes.Role, user.Role),
             };
 
+            var doktor = _db.Doktori.FirstOrDefault(d => d.KorisnikId == user.Id);
+            if (doktor != null)
+            {
+                claims.Add(new Claim("doktorId", doktor.Id.ToString()));
+            }
+
             var token = new JwtSecurityToken(
                 issuer: jwtIssuer,
-                audience: jwtIssuer,
+                audience: jwtAudience,
                 claims: claims,
                 expires: DateTime.Now.AddHours(6),
                 signingCredentials: credentials

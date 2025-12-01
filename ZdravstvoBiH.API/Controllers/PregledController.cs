@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
+using Zdravstvo.Infrastructure.Helpers;
 
 namespace ZdravstvoBiH.API.Controllers
 {
@@ -35,11 +37,28 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         // Create new pregled
-        [HttpPost]
-        public async Task<IActionResult> CreatePregled([FromBody] PregledDTO.CreatePregledDTO createPregledDTO)
+        [HttpPost("termini/{terminId}/pregled")]
+        [Authorize]
+        public async Task<IActionResult> CreatePregledForTermin(int terminId, [FromBody] PregledDTO.CreatePregledDTO createPregledDTO)
         {
-            var newPregled = await _pregledService.CreatePregled(createPregledDTO);
-            return CreatedAtAction(nameof(GetById), new { id = newPregled.Id }, newPregled);
+
+            try
+            {
+                var doktorId = User.GetDoktorId();
+                var result = await _pregledService.CreatePregledForTermin(terminId, createPregledDTO, doktorId);
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            } catch(InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }catch(ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+
         }
 
         // Update existing pregled

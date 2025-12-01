@@ -46,6 +46,14 @@ namespace Zdravstvo.Infrastructure.Service
         {
             var dijagnoza =  _mapper.Map<Dijagnoza>(createDijagnozaDTO);
 
+            /*
+             -- upisuje se pregledId od zadnjeg dodanog pregleda
+             */
+
+            var pregled = await _db.Pregledi.FirstOrDefaultAsync(x => x.DatumPregleda.Date == DateTime.Now.Date && x.DatumPregleda.Hour == DateTime.Now.Hour);
+
+            dijagnoza.PregledId = pregled.Id;
+
             _db.Dijagnoze.Add(dijagnoza);
             await _db.SaveChangesAsync();
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using Zdravstvo.Core.DTOs;
@@ -41,30 +42,33 @@ namespace Zdravstvo.Infrastructure.Service
         }
 
         // Create new pregled
-        public async Task<PregledDTO.ReadPregledDTO> CreatePregled(PregledDTO.CreatePregledDTO createPregledDTO)
+        public async Task<PregledDTO.ReadPregledDTO> CreatePregledForTermin(int terminId,PregledDTO.CreatePregledDTO createPregledDTO, int requestingDoktorId)
         {
+            var termin = await _db.Termini.FindAsync(terminId);
 
-        
+            if (termin == null) 
+                throw new ArgumentException("Termin ne postoji");
+            var now = DateTime.Now;
+
+            //if (!(termin.DatumVreme <= now && now < termin.DatumVreme.AddHours(1)))
+            //    throw new ArgumentException("Nije moguce izvan satnice termina upisati pregled");
+            if (termin.DoktorId != requestingDoktorId) 
+                throw new UnauthorizedAccessException("Nemate ovlasti za upis podata za pregled");
+            if (await _db.Pregledi.AnyAsync(p => p.TerminId == terminId))
+                throw new InvalidOperationException("Pregled za ovaj termin vec postoji!");
+
             var pregled = _mapper.Map<Pregled>(createPregledDTO);
-
-            var termin = await _db.Termini
-                .Include(t => t.Doktor)
-                .Include(t => t.Pacijent)
-                .FirstOrDefaultAsync(t => t.DatumVreme.Date.Hour == createPregledDTO.DatumPregleda.Date.Hour);
-           
-            if (termin == null)
-            {
-                throw new Exception("Termin not found for the given DatumPregleda.");
-            }
-
             pregled.TerminId = termin.Id;
             pregled.DoktorId = termin.DoktorId;
             pregled.PacijentId = termin.PacijentId;
             pregled.DatumPregleda = termin.DatumVreme;
 
+            termin.Status = "Zavrsen";
+
             _db.Pregledi.Add(pregled);
             await _db.SaveChangesAsync();
             return _mapper.Map<PregledDTO.ReadPregledDTO>(pregled);
+            
         }
 
         // Update existing pregled

@@ -78,6 +78,19 @@ namespace Zdravstvo.Infrastructure.Data
                 .HasIndex(d => d.PregledId)
                 .IsUnique();
 
+            // Termin <-> Pregled one-to-one
+            modelBuilder.Entity<Termin>()
+                .HasOne(t => t.Pregled)
+                .WithOne(p => p.Termin)
+                .HasForeignKey<Pregled>(p => p.TerminId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // enforce unique TerminId on Pregled
+            modelBuilder.Entity<Pregled>()
+                .HasIndex(p => p.TerminId)
+                .IsUnique();
+
         }
 
 

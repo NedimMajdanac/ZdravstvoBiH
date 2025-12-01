@@ -22,5 +22,6 @@ namespace Zdravstvo.Core.Entities
         public Pacijent Pacijent { get; set; }
         public int DoktorId { get; set; }
         public Doktor Doktor { get; set; }
+        public Pregled? Pregled { get; set; }
     }
 }
