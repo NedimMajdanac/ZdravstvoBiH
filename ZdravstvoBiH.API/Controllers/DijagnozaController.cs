@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
+using Zdravstvo.Infrastructure.Helpers;
 
 namespace ZdravstvoBiH.API.Controllers
 {
@@ -30,11 +32,28 @@ namespace ZdravstvoBiH.API.Controllers
             }
             return Ok(dijagnoza);
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateDijagnoza([FromBody] DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO)
+        [HttpPost("pregledi/{pregledId}/dijagnoza")]
+        [Authorize]
+        public async Task<IActionResult> CreateDijagnozaForPregled(int pregledId, [FromBody] DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO, int doktorId)
         {
-            var newDijagnoza = await _dijagnozaService.CreateDijagnoza(createDijagnozaDTO);
-            return CreatedAtAction(nameof(GetById), new {id = newDijagnoza.Id}, newDijagnoza);
+            try
+            {
+                var reqDoktorId = User.GetDoktorId();
+                var result = await _dijagnozaService.CreateDijagnozaForPregled(pregledId, createDijagnozaDTO, reqDoktorId);
+                return CreatedAtAction(nameof(GetById), new { Id = result.Id }, result);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch(InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);  
+            }
+            catch(ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDijagnoza(int id, [FromBody] DijagnozaDTO.UpdateDijagnozaDTO updateDijagnozaDTO)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,21 +43,20 @@ namespace Zdravstvo.Infrastructure.Service
         }
 
         // Create dijagnoza
-        public async Task<DijagnozaDTO.ReadDijagnozaDTO> CreateDijagnoza(DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO)
+        public async Task<DijagnozaDTO.ReadDijagnozaDTO> CreateDijagnozaForPregled(int pregledId, DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO, int requestingDoktorId)
         {
-            var dijagnoza =  _mapper.Map<Dijagnoza>(createDijagnozaDTO);
+            var pregled = await _db.Pregledi.FindAsync(pregledId);
+            if (pregled == null) 
+                throw new ArgumentException("Pregled ne postoji");
+            if (pregled.DoktorId != requestingDoktorId) 
+                throw new UnauthorizedAccessException("Niste ovlasteni za ovaj pregled");
+            if (await _db.Dijagnoze.AnyAsync(d => d.PregledId == pregledId))
+                throw new InvalidOperationException("Dijagnoza za ovaj pregled vec postoji");
 
-            /*
-             -- upisuje se pregledId od zadnjeg dodanog pregleda
-             */
-
-            var pregled = await _db.Pregledi.FirstOrDefaultAsync(x => x.DatumPregleda.Date == DateTime.Now.Date && x.DatumPregleda.Hour == DateTime.Now.Hour);
-
+            var dijagnoza = _mapper.Map<Dijagnoza>(createDijagnozaDTO);
             dijagnoza.PregledId = pregled.Id;
-
             _db.Dijagnoze.Add(dijagnoza);
             await _db.SaveChangesAsync();
-
             return _mapper.Map<DijagnozaDTO.ReadDijagnozaDTO>(dijagnoza);
         }
 
