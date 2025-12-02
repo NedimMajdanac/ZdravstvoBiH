@@ -11,7 +11,7 @@ namespace Zdravstvo.Core.DTOs
     {
         public class ReadReceptDTO
         {
-            public int PregledId { get; set; }
+            public int Id { get; set; }
             public string NazivLijeka { get; set; }
             public string Doziranje { get; set; }
             public DateTime DatumIzdavanja { get; set; }
@@ -19,7 +19,6 @@ namespace Zdravstvo.Core.DTOs
 
         public class CreateReceptDTO
         {
-            public int PregledId { get; set; }
             public string NazivLijeka { get; set; }
             public string Doziranje { get; set; }
             public DateTime DatumIzdavanja { get; set; }
