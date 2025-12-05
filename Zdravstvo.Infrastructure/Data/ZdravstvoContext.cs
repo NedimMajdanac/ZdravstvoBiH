@@ -18,21 +18,19 @@ namespace Zdravstvo.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Doktor ↔ Ustanova
+            
             modelBuilder.Entity<Doktor>()
                 .HasOne(d => d.Ustanova)
                 .WithMany(u => u.Doktori)
                 .HasForeignKey(d => d.UstanovaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Termin ↔ Doktor
             modelBuilder.Entity<Termin>()
                 .HasOne(t => t.Doktor)
                 .WithMany(d => d.Termini)
                 .HasForeignKey(t => t.DoktorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Termin ↔ Pacijent
             modelBuilder.Entity<Termin>()
                 .HasOne(t => t.Pacijent)
                 .WithMany(p => p.Termini)
@@ -78,7 +76,6 @@ namespace Zdravstvo.Infrastructure.Data
                 .HasIndex(d => d.PregledId)
                 .IsUnique();
 
-            // Termin <-> Pregled one-to-one
             modelBuilder.Entity<Termin>()
                 .HasOne(t => t.Pregled)
                 .WithOne(p => p.Termin)
@@ -86,10 +83,21 @@ namespace Zdravstvo.Infrastructure.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // enforce unique TerminId on Pregled
             modelBuilder.Entity<Pregled>()
                 .HasIndex(p => p.TerminId)
                 .IsUnique();
+
+           modelBuilder.Entity<Termin>()
+                .HasOne(t=>t.Uputnica)
+                .WithOne()
+                .HasForeignKey<Termin>(t=>t.UputnicaId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Termin>()
+                .HasIndex(t => t.UputnicaId)
+                .IsUnique();
+
 
         }
 

@@ -92,6 +92,7 @@ namespace Zdravstvo.Infrastructure.Service
                     throw new ArgumentException("Za termin kod specijaliste potrebna vam je uputnica");
 
                 var uputnica = await _db.Uputnice.FindAsync(createTerminDTO.UputnicaId.Value);
+                
                 if (uputnica == null)
                     throw new ArgumentException("Uputnica ne postoji");
 
