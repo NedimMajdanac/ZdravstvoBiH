@@ -57,15 +57,23 @@ namespace Zdravstvo.Infrastructure.Service
             return _mapper.Map<UputnicaDTO.ReadUputnicaDTO>(uputnica);
         }
         // Create Uputnica
-        public async Task<UputnicaDTO.ReadUputnicaDTO> CreateUputnica(UputnicaDTO.CreateUputnicaDTO createUputnicaDTO)
+        public async Task<UputnicaDTO.ReadUputnicaDTO> CreateUputnicaForTermin(int terminId, UputnicaDTO.CreateUputnicaDTO createUputnicaDTO, int requestingDoktor)
         {
-            
+
+            var termin = await _db.Termini.FindAsync(terminId);
+
+            if (termin == null)
+                throw new ArgumentException("Termin ne postoji");
+            if (termin.DoktorId != requestingDoktor)
+                throw new UnauthorizedAccessException("Niste ovlasteni za kreiranje uputnice");
 
             var uputnica = _mapper.Map<Uputnica>(createUputnicaDTO);
             
             uputnica.SifraUputnice = GenerisiSifruUputnice();
             uputnica.IsKoristena = false;
             uputnica.DatumKoristenja = null;
+            uputnica.PacijentId = termin.PacijentId;
+            uputnica.DoktorId = termin.DoktorId;
 
             _db.Uputnice.Add(uputnica);
             await _db.SaveChangesAsync();

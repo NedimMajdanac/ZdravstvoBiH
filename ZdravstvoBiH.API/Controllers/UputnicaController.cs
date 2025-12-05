@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
+using Zdravstvo.Infrastructure.Helpers;
 
 namespace ZdravstvoBiH.API.Controllers
 {
@@ -31,10 +34,12 @@ namespace ZdravstvoBiH.API.Controllers
             return Ok(uputnica);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUputnica([FromBody] Zdravstvo.Core.DTOs.UputnicaDTO.CreateUputnicaDTO createUputnicaDTO)
+        [HttpPost("/{terminId}")]
+        [Authorize]
+        public async Task<IActionResult> CreateUputnica(int terminId, [FromBody] UputnicaDTO.CreateUputnicaDTO createUputnicaDTO, int doktorID)
         {
-            var uputnica = await _uputnicaService.CreateUputnica(createUputnicaDTO);
+            var doktor = User.GetDoktorId();
+            var uputnica = await _uputnicaService.CreateUputnicaForTermin(terminId,createUputnicaDTO, doktor);
             return CreatedAtAction(nameof(GetUputnicaById), new { id = uputnica.Id }, uputnica);
         }
 

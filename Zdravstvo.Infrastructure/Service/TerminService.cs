@@ -76,6 +76,35 @@ namespace Zdravstvo.Infrastructure.Service
             await ValidatePacijentTermin(createTerminDTO.DatumVreme, createTerminDTO.PacijentId);
             await ValidateTerminLimit(createTerminDTO.DatumVreme, createTerminDTO.DoktorId);
 
+            var doktor = await _db.Doktori
+                .Include(d => d.Specijalizacija)
+                .FirstOrDefaultAsync(d => d.Id == createTerminDTO.DoktorId);
+           
+            if (doktor == null)
+                throw new ArgumentException("Doktor ne postoji");
+
+
+            var specName = doktor.Specijalizacija?.Naziv ?? string.Empty;
+
+            if(!string.Equals(specName, "Porodična medicina", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!createTerminDTO.UputnicaId.HasValue)
+                    throw new ArgumentException("Za termin kod specijaliste potrebna vam je uputnica");
+
+                var uputnica = await _db.Uputnice.FindAsync(createTerminDTO.UputnicaId.Value);
+                if (uputnica == null)
+                    throw new ArgumentException("Uputnica ne postoji");
+
+                if (uputnica.IsKoristena)
+                    throw new InvalidOperationException("Uputnica je vec iskoristena");
+
+                if (uputnica.PacijentId != createTerminDTO.PacijentId)
+                    throw new ArgumentException("Uputnica nije izdata za ovog pacijenta");
+
+                uputnica.IsKoristena = true;
+                uputnica.DatumKoristenja = DateTime.Now;
+            }
+
             var termin = _mapper.Map<Termin>(createTerminDTO);
             
             termin.Status = "Zakazan"; // Postavljanje statusa na "Zakazan" pri kreiranju

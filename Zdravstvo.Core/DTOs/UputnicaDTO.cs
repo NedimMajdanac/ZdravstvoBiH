@@ -24,8 +24,8 @@ namespace Zdravstvo.Core.DTOs
 
         public class CreateUputnicaDTO
         {
-            public int PacijentId { get; set; } // trenutno pacijent koji je na pregledu
-            public int DoktorId { get; set; }  // Doktor koji je izdao uputnicu :: logovan doktor njegov id se koristi
+           // public int PacijentId { get; set; } // trenutno pacijent koji je na pregledu
+           // public int DoktorId { get; set; }  // Doktor koji je izdao uputnicu :: logovan doktor njegov id se koristi
             public int SpecijalizacijaId { get; set; } // Specijalizacija na koju je uputnica izdata : : biranje iz liste specijalizacija
 
             public DateTime DatumIzdavanja { get; set; } // automatski se postavlja na trenutni datum
