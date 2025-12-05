@@ -26,7 +26,7 @@ namespace Zdravstvo.Infrastructure.Service
 
         public async Task ValidateTermin(DateTime dateTime,int doktorId)
         {
-            bool exists = await _db.Termini.AnyAsync(x => x.DatumVreme.Hour == dateTime.Hour && x.DoktorId == doktorId);
+            bool exists = await _db.Termini.AnyAsync(x => x.DatumVreme.Hour == dateTime.Hour && x.DatumVreme.Date == dateTime.Date && x.DoktorId == doktorId);
             if (exists)
                 throw new ArgumentException("Doktor već ima zakazan termin u ovom terminu");
             if(dateTime.Date < DateTime.Now.Date)
@@ -101,6 +101,10 @@ namespace Zdravstvo.Infrastructure.Service
 
                 if (uputnica.PacijentId != createTerminDTO.PacijentId)
                     throw new ArgumentException("Uputnica nije izdata za ovog pacijenta");
+
+                if (uputnica.SpecijalizacijaId != doktor.SpecijalizacijaId)
+                    throw new ArgumentException("Uputnica specijalisti ne odgovara izabranom doktoru");
+                
 
                 uputnica.IsKoristena = true;
                 uputnica.DatumKoristenja = DateTime.Now;
