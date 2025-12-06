@@ -1,4 +1,5 @@
-﻿using BCrypt.Net;
+﻿using AutoMapper;
+using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -22,11 +23,13 @@ namespace Zdravstvo.Infrastructure.Service
     {
         private readonly ZdravstvoContext _db;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
       
-        public AuthService(ZdravstvoContext db, IConfiguration configuration)
+        public AuthService(ZdravstvoContext db, IConfiguration configuration, IMapper mapper)
         {
             _db = db;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         // Registracija
@@ -51,6 +54,59 @@ namespace Zdravstvo.Infrastructure.Service
             // JWT token
             return GenerateJwtToken(user);
             
+        }
+
+        // Register for user pacijent profile
+        public async Task<string> RegisterUserForProfile(KorisnikDTO.RegisterKorisnikForProfile registerKorisnikForProfileDTO)
+        {
+            bool exists = await _db.Korisnici.AnyAsync(x => x.Email == registerKorisnikForProfileDTO.Email);
+            if (exists)
+                throw new Exception("Korisnik sa email postoji");
+
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerKorisnikForProfileDTO.Password);
+            
+            using var tx = await _db.Database.BeginTransactionAsync();
+
+            try
+            {
+                var korisnik = new Korisnik
+                {
+                    Email = registerKorisnikForProfileDTO.Email,
+                    PasswordHash = hashedPassword,
+                    Role = string.IsNullOrWhiteSpace(registerKorisnikForProfileDTO.Role) ? "Pacijent" : registerKorisnikForProfileDTO.Role
+                };
+                var pacijent = _mapper.Map<Pacijent>(registerKorisnikForProfileDTO);
+
+                _db.Korisnici.Add(korisnik);
+                var karton = new MedicinskiKarton
+                {
+                    Alergije = string.Empty,
+                    Vakcinacija = string.Empty,
+                    KrvnaGrupa = string.Empty,
+                    HronicneBolesti = string.Empty,
+                    Operacije = string.Empty,
+                    PorodicnaAnamneza = string.Empty,
+                    Terapije = string.Empty,
+                    Napomena = string.Empty
+                };
+                _db.MedicinskiKartoni.Add(karton);
+
+                pacijent.Korisnik = korisnik;
+                pacijent.MedicinskiKarton = karton;
+
+                _db.Pacijenti.Add(pacijent);
+
+                await _db.SaveChangesAsync();
+                await tx.CommitAsync();
+
+                return GenerateJwtToken(korisnik);
+                
+            }
+            catch(DbUpdateException dbEX)
+            {
+                await tx.RollbackAsync();
+                throw;
+            }
         }
 
         // Login

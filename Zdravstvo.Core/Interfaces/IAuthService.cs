@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zdravstvo.Core.DTOs;
 
 namespace Zdravstvo.Core.Interfaces
 {
@@ -10,5 +11,6 @@ namespace Zdravstvo.Core.Interfaces
     {
         Task<string> RegisterUser(DTOs.KorisnikDTO.RegisterKorisnikDTO registerKorisnikDTO);
         Task<string> LoginUser(DTOs.KorisnikDTO.LoginKorisnikDTO loginKorisnikDTO);
+        Task<string> RegisterUserForProfile(KorisnikDTO.RegisterKorisnikForProfile registerKorisnikForProfileDTO);
     }
 }

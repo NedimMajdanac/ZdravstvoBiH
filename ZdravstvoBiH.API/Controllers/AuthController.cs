@@ -30,5 +30,11 @@ namespace ZdravstvoBiH.API.Controllers
             var token = await _authService.LoginUser(loginKorisnikDTO);
             return Ok(new { Token = token });
         }
+        [HttpPost("/register/register-for-profile")]
+        public async Task<IActionResult> RegisterUserProfile(KorisnikDTO.RegisterKorisnikForProfile dto)
+        {
+            var token = await _authService.RegisterUserForProfile(dto);
+            return Ok(new { Token = token });
+        }
     }
 }
