@@ -83,10 +83,27 @@ namespace Zdravstvo.Infrastructure.Service
             return _mapper.Map<PacijentDTO.ReadPacijentDTO>(pacijent);
         }
 
-        // Search pacijenti by ime, prezime or jmbg
-        // Registacija novih pacijenata
-        // Login funkcionalnost
-        // Brisanje pacijenata
+       public async Task<MedicinskiKartonDTO.ReadMedicinskiKartonDTO> UpdatePacijentKarton(int pacijentId, MedicinskiKartonDTO.UpdateMedicinskiKartonDTO kartonDTO)
+        {
+            var pacijent = await _db.Pacijenti
+                .Include(p => p.MedicinskiKarton)
+                .FirstOrDefaultAsync(p => p.Id == pacijentId);
+
+            if (pacijent == null)
+                throw new ArgumentException("Pacijent ne postoji!");
+            var karton = pacijent.MedicinskiKarton ?? new MedicinskiKarton();
+
+            _mapper.Map(kartonDTO, karton);
+
+            if (pacijent.MedicinskiKartonId == 0)
+            {
+                _db.MedicinskiKartoni.Add(karton);
+                await _db.SaveChangesAsync();
+                pacijent.MedicinskiKartonId = karton.Id;
+            }
+            await _db.SaveChangesAsync();
+            return _mapper.Map<MedicinskiKartonDTO.ReadMedicinskiKartonDTO>(karton);
+        }
 
     }
 }
