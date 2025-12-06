@@ -53,7 +53,7 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         [HttpPut("{pacijentId}/medicinski-karton")]
-        //[Authorize(Roles = "Doktor")]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> UpdatePacijentKarton(int pacijentId, [FromBody] MedicinskiKartonDTO.UpdateMedicinskiKartonDTO updateKartonDTO)
         {
             var result = await _pacijentService.UpdatePacijentKarton(pacijentId, updateKartonDTO);

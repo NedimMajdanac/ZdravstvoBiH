@@ -31,8 +31,8 @@ namespace ZdravstvoBiH.API.Controllers
             return Ok(recept);
         }
         [HttpPost("pregledi/{pregledId}/recepti")]
-        [Authorize]
-        public async Task<IActionResult> CreateRecept(int pregledId, [FromBody] ReceptDTO.CreateReceptDTO createReceptDTO,int doktorId)
+        [Authorize(Roles = "Doktor")]
+        public async Task<IActionResult> CreateRecept(int pregledId, [FromBody] ReceptDTO.CreateReceptDTO createReceptDTO)
         {
             try
             {

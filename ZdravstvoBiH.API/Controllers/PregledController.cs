@@ -38,7 +38,7 @@ namespace ZdravstvoBiH.API.Controllers
 
         // Create new pregled
         [HttpPost("termini/{terminId}/pregled")]
-        [Authorize]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> CreatePregledForTermin(int terminId, [FromBody] PregledDTO.CreatePregledDTO createPregledDTO)
         {
 
@@ -63,6 +63,7 @@ namespace ZdravstvoBiH.API.Controllers
 
         // Update existing pregled
         [HttpPut("{id}")]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> UpdatePregled(int id, [FromBody] PregledDTO.UpdatePregledDTO updatePregledDTO)
         {
             var updatedPregled = await _pregledService.UpdatePregled(id, updatePregledDTO);

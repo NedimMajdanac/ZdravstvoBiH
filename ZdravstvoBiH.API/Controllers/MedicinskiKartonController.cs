@@ -17,6 +17,7 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> GetAllMedicinskiKartoni()
         {
             var kartoni = await _medicinskiKartonService.GetAllMedKartoni();

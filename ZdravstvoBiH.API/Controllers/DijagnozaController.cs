@@ -17,12 +17,14 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> GetAll()
         {
             var dijagnoze = await _dijagnozaService.GetAll();
             return Ok(dijagnoze);
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> GetById(int id)
         {
             var dijagnoza = await _dijagnozaService.GetDijagnozaById(id);
@@ -33,7 +35,7 @@ namespace ZdravstvoBiH.API.Controllers
             return Ok(dijagnoza);
         }
         [HttpPost("pregledi/{pregledId}/dijagnoza")]
-        [Authorize]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> CreateDijagnozaForPregled(int pregledId, [FromBody] DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO, int doktorId)
         {
             try
@@ -56,6 +58,7 @@ namespace ZdravstvoBiH.API.Controllers
             }
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> UpdateDijagnoza(int id, [FromBody] DijagnozaDTO.UpdateDijagnozaDTO updateDijagnozaDTO)
         {
             var updatedDijagnoza = await _dijagnozaService.UpdateDijagnoza(id, updateDijagnozaDTO);
