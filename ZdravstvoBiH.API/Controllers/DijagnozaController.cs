@@ -36,7 +36,7 @@ namespace ZdravstvoBiH.API.Controllers
         }
         [HttpPost("pregledi/{pregledId}/dijagnoza")]
         [Authorize(Roles = "Doktor")]
-        public async Task<IActionResult> CreateDijagnozaForPregled(int pregledId, [FromBody] DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO, int doktorId)
+        public async Task<IActionResult> CreateDijagnozaForPregled(int pregledId, [FromBody] DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO)
         {
             try
             {

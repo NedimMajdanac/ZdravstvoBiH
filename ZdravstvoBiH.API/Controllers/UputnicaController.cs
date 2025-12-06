@@ -36,7 +36,7 @@ namespace ZdravstvoBiH.API.Controllers
 
         [HttpPost("/{terminId}")]
         [Authorize]
-        public async Task<IActionResult> CreateUputnica(int terminId, [FromBody] UputnicaDTO.CreateUputnicaDTO createUputnicaDTO, int doktorID)
+        public async Task<IActionResult> CreateUputnica(int terminId, [FromBody] UputnicaDTO.CreateUputnicaDTO createUputnicaDTO)
         {
             var doktor = User.GetDoktorId();
             var uputnica = await _uputnicaService.CreateUputnicaForTermin(terminId,createUputnicaDTO, doktor);
