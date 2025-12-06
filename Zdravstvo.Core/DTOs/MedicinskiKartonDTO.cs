@@ -34,6 +34,7 @@ namespace Zdravstvo.Core.DTOs
 
         public class UpdateMedicinskiKartonDTO
         {
+            public string KrvnaGrupa { get; set; }
             public string Alergije { get; set; }
             public string HronicneBolesti { get; set; }
             public string Terapije { get; set; }

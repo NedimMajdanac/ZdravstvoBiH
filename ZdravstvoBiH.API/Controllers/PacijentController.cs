@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
 
@@ -50,5 +51,18 @@ namespace ZdravstvoBiH.API.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        [HttpPut("{pacijentId}/medicinski-karton")]
+        //[Authorize(Roles = "Doktor")]
+        public async Task<IActionResult> UpdatePacijentKarton(int pacijentId, [FromBody] MedicinskiKartonDTO.UpdateMedicinskiKartonDTO updateKartonDTO)
+        {
+            var result = await _pacijentService.UpdatePacijentKarton(pacijentId, updateKartonDTO);
+            if(result == null)
+            {
+                return NotFound(new { message = "Pacijent ne postoji!" });
+            }
+            return Ok(result);
+        }
+
     }
 }
