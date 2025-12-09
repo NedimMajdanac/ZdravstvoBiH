@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
+using Zdravstvo.Infrastructure.Helpers;
 
 namespace ZdravstvoBiH.API.Controllers
 {
@@ -57,12 +58,41 @@ namespace ZdravstvoBiH.API.Controllers
         public async Task<IActionResult> UpdatePacijentKarton(int pacijentId, [FromBody] MedicinskiKartonDTO.UpdateMedicinskiKartonDTO updateKartonDTO)
         {
             var result = await _pacijentService.UpdatePacijentKarton(pacijentId, updateKartonDTO);
-            if(result == null)
+            if (result == null)
             {
                 return NotFound(new { message = "Pacijent ne postoji!" });
             }
             return Ok(result);
         }
 
+        [HttpGet("/me")]
+        [Authorize]
+        public async Task<IActionResult> GetLoggedPacijent()
+        {
+            try
+            {
+                var korisnikId = User.GetKorisnikId();
+                var pacijent = await _pacijentService.GetLoggedPacijent(korisnikId);
+                return Ok(pacijent);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+
+            }
+        }
+
+        [HttpPut("/me")]
+        [Authorize]
+        public async Task<IActionResult> UpdateLoggedPacijent([FromBody] PacijentDTO.UpdatePacijentDTO pacijentDTO)
+        {
+            var korisnikId = User.GetKorisnikId();
+            var updatedPacijent = await _pacijentService.UpdateLoggedPacijent(korisnikId, pacijentDTO);
+            if (updatedPacijent == null)
+            {
+                return NotFound(new { message = "Pacijent ne postoji!" });
+            }
+            return Ok(updatedPacijent);
+        }
     }
 }

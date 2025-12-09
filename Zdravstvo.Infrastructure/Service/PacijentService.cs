@@ -105,5 +105,27 @@ namespace Zdravstvo.Infrastructure.Service
             return _mapper.Map<MedicinskiKartonDTO.ReadMedicinskiKartonDTO>(karton);
         }
 
+        // Get current logged in pacijent
+        public async Task<PacijentDTO.ReadPacijentDTO> GetLoggedPacijent(int korisnikId)
+        {
+            var pacijent = await _db.Pacijenti
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.KorisnikId == korisnikId);
+            if (pacijent == null) return null;
+            return _mapper.Map<PacijentDTO.ReadPacijentDTO>(pacijent);
+        }
+
+        // Update current logged in pacijent
+        public async Task<PacijentDTO.ReadPacijentDTO> UpdateLoggedPacijent(int korisnikId, PacijentDTO.UpdatePacijentDTO pacijentDTO)
+        {
+            await _validationService.ValidatePacijentTelefon(pacijentDTO.BrojTelefona);
+            await _validationService.ValidatePacijentEmail(pacijentDTO.Email);
+            var pacijent = await _db.Pacijenti.FirstOrDefaultAsync(p => p.KorisnikId == korisnikId);
+            if (pacijent == null) throw new Exception("Pacijent ne postoji");
+            _mapper.Map(pacijentDTO, pacijent);
+            await _db.SaveChangesAsync();
+            return _mapper.Map<PacijentDTO.ReadPacijentDTO>(pacijent);
+        }
+
     }
 }
