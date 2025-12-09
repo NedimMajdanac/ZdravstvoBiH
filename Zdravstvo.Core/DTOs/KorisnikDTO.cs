@@ -43,6 +43,11 @@ namespace Zdravstvo.Core.DTOs
             public string Adresa { get; set; }
             public string Spol {  get; set; }
         }
-
+        public class CurrentUserDTO
+        {
+            public KorisnikDTO.ReadKorisnikDTO Korisnik { get; set; }
+            public PacijentDTO.ReadPacijentDTO Pacijent { get; set; }
+            public DoktorDTO.ReadDoktorDTO Doktor { get; set; }
+        }
     }
 }

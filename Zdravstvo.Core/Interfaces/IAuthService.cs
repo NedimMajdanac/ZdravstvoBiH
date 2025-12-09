@@ -12,5 +12,6 @@ namespace Zdravstvo.Core.Interfaces
         Task<string> RegisterUser(DTOs.KorisnikDTO.RegisterKorisnikDTO registerKorisnikDTO);
         Task<string> LoginUser(DTOs.KorisnikDTO.LoginKorisnikDTO loginKorisnikDTO);
         Task<string> RegisterUserForProfile(KorisnikDTO.RegisterKorisnikForProfile registerKorisnikForProfileDTO);
+        Task<KorisnikDTO.CurrentUserDTO> GetLoggedUser(int korisnikId);
     }
 }

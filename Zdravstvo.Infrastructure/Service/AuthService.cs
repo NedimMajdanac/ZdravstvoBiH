@@ -158,5 +158,27 @@ namespace Zdravstvo.Infrastructure.Service
             
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+        public async Task<KorisnikDTO.CurrentUserDTO> GetLoggedUser(int korisnikId)
+        {
+            var korisnik = await _db.Korisnici
+                .AsNoTracking()
+                .Include(u => u.Pacijent)
+                .Include(u => u.Doktor)
+                .FirstOrDefaultAsync(k => k.Id == korisnikId);
+
+            if (korisnik == null)
+                throw new Exception("Korisnik nije pronadjen.");
+
+            var result = new KorisnikDTO.CurrentUserDTO
+            {
+                Korisnik = _mapper.Map<KorisnikDTO.ReadKorisnikDTO>(korisnik),
+                Pacijent = korisnik.Pacijent != null ? _mapper.Map<PacijentDTO.ReadPacijentDTO>(korisnik.Pacijent) : null,
+                Doktor = korisnik.Doktor != null ? _mapper.Map<DoktorDTO.ReadDoktorDTO>(korisnik.Doktor) : null
+            };
+            return result;
+        }
+
     }
 }
