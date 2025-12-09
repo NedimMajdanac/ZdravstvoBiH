@@ -1,7 +1,9 @@
 ﻿using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
+using Zdravstvo.Infrastructure.Helpers;
 
 namespace ZdravstvoBiH.API.Controllers
 {
@@ -35,6 +37,18 @@ namespace ZdravstvoBiH.API.Controllers
         {
             var token = await _authService.RegisterUserForProfile(dto);
             return Ok(new { Token = token });
+        }
+        [HttpGet("current-user")]
+        [Authorize]
+        public async Task<IActionResult> CurrentUser()
+        {
+            var korisnikId = User.GetKorisnikId();
+            var currentUser = await _authService.GetLoggedUser(korisnikId);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+            return Ok(currentUser);
         }
     }
 }

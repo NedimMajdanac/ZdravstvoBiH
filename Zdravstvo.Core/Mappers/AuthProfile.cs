@@ -13,7 +13,8 @@ namespace Zdravstvo.Core.Mappers
     {
         public AuthProfile()
         {
-            CreateMap<KorisnikDTO.RegisterKorisnikForProfile,Pacijent>();  
+            CreateMap<KorisnikDTO.RegisterKorisnikForProfile,Pacijent>();
+            CreateMap<Korisnik, KorisnikDTO.ReadKorisnikDTO>();
         }
     }
 }

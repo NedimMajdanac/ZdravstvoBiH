@@ -17,5 +17,12 @@ namespace Zdravstvo.Infrastructure.Helpers
                 throw new InvalidOperationException("DoktorID claim missing or invalid");
             return id;
         }
+        public static int GetKorisnikId(this ClaimsPrincipal user)
+        {
+            var claim = user.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null || !int.TryParse(claim.Value, out var id))
+                throw new InvalidOperationException("KorisnikID claim missing or invalid");
+            return id;
+        }
     }
 }
