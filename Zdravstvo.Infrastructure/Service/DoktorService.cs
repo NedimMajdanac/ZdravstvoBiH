@@ -102,5 +102,14 @@ namespace Zdravstvo.Infrastructure.Service
             return _mapper.Map<DoktorDTO.ReadDoktorDTO>(doktor);
         }
 
+        // Get current logged in doktor
+        public async Task<DoktorDTO.ReadDoktorDTO> GetLoggedDoktor(int korisnikId)
+        {
+            var doktor = await _db.Doktori
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d => d.KorisnikId == korisnikId);
+            if (doktor == null) return null;
+            return _mapper.Map<DoktorDTO.ReadDoktorDTO>(doktor);
+        }
     }
 }

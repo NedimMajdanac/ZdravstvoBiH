@@ -13,5 +13,6 @@ namespace Zdravstvo.Core.Interfaces
         Task<DoktorDTO.ReadDoktorDTO> GetDoktorById(int id);
         Task<DoktorDTO.ReadDoktorDTO> CreateDoktor(DoktorDTO.CreateDoktorDTO createDoktorDTO);
         Task<DoktorDTO.ReadDoktorDTO> UpdateDoktor(int id, DoktorDTO.UpdateDoktorDTO updateDoktorDTO);
+        Task<DoktorDTO.ReadDoktorDTO> GetLoggedDoktor(int korisnikId);
     }
 }

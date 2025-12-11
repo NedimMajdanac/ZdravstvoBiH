@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.Interfaces;
+using Zdravstvo.Infrastructure.Helpers;
 
 namespace ZdravstvoBiH.API.Controllers
 {
@@ -45,6 +47,22 @@ namespace ZdravstvoBiH.API.Controllers
                 return Ok(azuriraniDoktor);
             }
             catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetLoggedDoktor()
+        {
+            try
+            {
+                var korisnikID = User.GetKorisnikId();
+                var doktor = await _doktorService.GetLoggedDoktor(korisnikID);
+                return Ok(doktor);
+
+            }catch (Exception ex)
             {
                 return NotFound(new { message = ex.Message });
             }
