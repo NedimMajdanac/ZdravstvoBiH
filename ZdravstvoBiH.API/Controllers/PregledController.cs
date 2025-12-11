@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Helpers;
@@ -72,6 +73,33 @@ namespace ZdravstvoBiH.API.Controllers
                 return NotFound();
             }
             return Ok(updatedPregled);
+        }
+
+        [HttpGet("pacijent/{pacijentId}")]
+        public async Task<IActionResult> GetPreglediLoggedPacijent(int pacijentId)
+        {
+            try
+            {
+                var pregledPacijent = await _pregledService.GetPreglediForLoggedPacient(pacijentId);
+                return Ok(pregledPacijent);
+
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("doktor/{doktorId}")]
+        public async Task<IActionResult> GetPreglediLoggedDoctor(int doktorId)
+        {
+            try
+            {
+                var pregledDoktor = await _pregledService.GetPreglediForLoggedDoktor(doktorId);
+                return Ok(pregledDoktor);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

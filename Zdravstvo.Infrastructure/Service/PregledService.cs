@@ -83,5 +83,24 @@ namespace Zdravstvo.Infrastructure.Service
             await _db.SaveChangesAsync();
             return _mapper.Map<PregledDTO.ReadPregledDTO>(pregled);
         }
+
+        // GET pregledi by vlasinistvo (pacijent i doktor) :: trenutno logged in korisnik
+        public async Task<List<PregledDTO.ReadPregledDTO>> GetPreglediForLoggedPacient(int pacijentId)
+        {
+            var pregled = await _db.Pregledi
+                .Where(x => x.PacijentId == pacijentId)
+                .ToListAsync();
+            if (pregled == null) throw new Exception("Pregled ne postoji");
+            return _mapper.Map<List<PregledDTO.ReadPregledDTO>>(pregled);
+        }
+
+        public async Task<List<PregledDTO.ReadPregledDTO>> GetPreglediForLoggedDoktor(int doktorId)
+        {
+            var pregled = await _db.Pregledi
+                .Where(x => x.DoktorId == doktorId)
+                .ToListAsync(); ;
+            if (pregled == null) throw new Exception("Pregled ne postoji");
+            return _mapper.Map<List<PregledDTO.ReadPregledDTO>>(pregled);
+        }
     }
 }
