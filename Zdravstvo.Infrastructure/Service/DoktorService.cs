@@ -111,5 +111,16 @@ namespace Zdravstvo.Infrastructure.Service
             if (doktor == null) return null;
             return _mapper.Map<DoktorDTO.ReadDoktorDTO>(doktor);
         }
+
+        // Updaate current logged in Doktor
+        public async Task<DoktorDTO.ReadDoktorDTO> UpdateCurrentDoktor(int korisnikId, DoktorDTO.UpdateDoktorDTO doktorDTO)
+        {
+            var doktor = await _db.Doktori
+                .FirstOrDefaultAsync(d => d.KorisnikId == korisnikId);
+            if (doktor == null) throw new Exception("Doktor ne postoji");
+            _mapper.Map(doktorDTO, doktor);
+            await _db.SaveChangesAsync();
+            return _mapper.Map<DoktorDTO.ReadDoktorDTO>(doktor);
+        }
     }
 }

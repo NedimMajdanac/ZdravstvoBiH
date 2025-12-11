@@ -67,5 +67,22 @@ namespace ZdravstvoBiH.API.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        [HttpPut("me")]
+        [Authorize]
+        public async Task<IActionResult> UpdateLoggedDoktor([FromBody] Zdravstvo.Core.DTOs.DoktorDTO.UpdateDoktorDTO updateDoktorDTO)
+        {
+            try
+            {
+                var korisnikID = User.GetKorisnikId();
+                var azuriraniDoktor = await _doktorService.UpdateCurrentDoktor(korisnikID, updateDoktorDTO);
+                return Ok(azuriraniDoktor);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
     }
 }
