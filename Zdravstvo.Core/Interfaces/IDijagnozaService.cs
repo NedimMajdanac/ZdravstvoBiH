@@ -13,5 +13,7 @@ namespace Zdravstvo.Core.Interfaces
         Task<DijagnozaDTO.ReadDijagnozaDTO> GetDijagnozaById(int id);
         Task<DijagnozaDTO.ReadDijagnozaDTO> CreateDijagnozaForPregled(int pregledId, DijagnozaDTO.CreateDijagnozaDTO createDijagnozaDTO, int requestingDoktorId);
         Task<DijagnozaDTO.ReadDijagnozaDTO> UpdateDijagnoza(int id, DijagnozaDTO.UpdateDijagnozaDTO updateDijagnozaDTO);
+        Task<List<DijagnozaDTO.ReadDijagnozaDTO>> GetDijagnozeByPacijentId(int pacijentId);
     }
+    
 }

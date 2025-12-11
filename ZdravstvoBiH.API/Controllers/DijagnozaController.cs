@@ -68,5 +68,19 @@ namespace ZdravstvoBiH.API.Controllers
             }
             return Ok(updatedDijagnoza);
         }
+
+        [HttpGet("pacijent/{pacijentId}")]
+        public async Task<IActionResult> GetDijagnozeByPacijentId(int pacijentId)
+        {
+            try
+            {
+                var dijagnoze = await _dijagnozaService.GetDijagnozeByPacijentId(pacijentId);
+                
+                return Ok(dijagnoze);
+            }catch(ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

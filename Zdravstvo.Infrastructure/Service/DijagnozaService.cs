@@ -74,5 +74,15 @@ namespace Zdravstvo.Infrastructure.Service
 
             return _mapper.Map<DijagnozaDTO.ReadDijagnozaDTO>(updatedDijagnoza);
         }
+
+        // Get dijagnoza by Pacijent ID
+        public async Task<List<DijagnozaDTO.ReadDijagnozaDTO>> GetDijagnozeByPacijentId(int pacijentId)
+        {
+            var dijagnoze = await _db.Dijagnoze
+                .Include(d => d.Pregled)
+                .Where(d => d.Pregled.PacijentId == pacijentId)
+                .ToListAsync();
+            return _mapper.Map<List<DijagnozaDTO.ReadDijagnozaDTO>>(dijagnoze);
+        }
     }
 }
