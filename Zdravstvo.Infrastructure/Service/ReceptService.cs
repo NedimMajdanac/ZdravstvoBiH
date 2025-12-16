@@ -66,5 +66,15 @@ namespace Zdravstvo.Infrastructure.Service
             await _db.SaveChangesAsync();
             return _mapper.Map<ReceptDTO.ReadReceptDTO>(updatedRecept);
         }
+
+        // GET recepti by pacijent id
+        public async Task<List<ReceptDTO.ReadReceptDTO>> GetReceptiForPacijent(int pacijentId)
+        {
+            var recepti = await _db.Recepti
+                .Include(r => r.Pregled)
+                .Where(r => r.Pregled.PacijentId == pacijentId)
+                .ToListAsync();
+            return _mapper.Map<List<ReceptDTO.ReadReceptDTO>>(recepti);
+        }
     }
 }

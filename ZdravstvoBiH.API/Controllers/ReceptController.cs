@@ -62,5 +62,19 @@ namespace ZdravstvoBiH.API.Controllers
             return Ok(recept);
         }
 
+        [HttpGet("pacijenti/{pacijentId}")]
+        public async Task<IActionResult> GetReceptiForPacijent(int pacijentId)
+        {
+            try
+            {
+                var recepti = await _receptService.GetReceptiForPacijent(pacijentId);
+                return Ok(recepti);
+
+            }catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+        
     }
 }

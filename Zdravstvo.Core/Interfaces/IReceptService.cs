@@ -13,6 +13,7 @@ namespace Zdravstvo.Core.Interfaces
         Task<ReceptDTO.ReadReceptDTO> GetReceptById(int id);
         Task<ReceptDTO.ReadReceptDTO> CreateReceptForPregled(int pregledId, ReceptDTO.CreateReceptDTO createReceptDTO, int requestingDoktorId);
         Task<ReceptDTO.ReadReceptDTO> UpdateRecept(int receptId, ReceptDTO.UpdateReceptDTO updateReceptDTO);
+        Task<List<ReceptDTO.ReadReceptDTO>> GetReceptiForPacijent(int pacijentId);
 
     }
 }
