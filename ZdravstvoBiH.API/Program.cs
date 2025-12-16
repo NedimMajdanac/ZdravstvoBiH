@@ -69,6 +69,7 @@ builder.Services.AddScoped<IUputnicaService, UputnicaService>();
 builder.Services.AddScoped<IPregledService,PregledService>();
 builder.Services.AddScoped<IDijagnozaService, DijagnozaService>();
 builder.Services.AddScoped<IReceptService,ReceptService>();
+builder.Services.AddScoped<ISpecijalizacijaService, SpecijelizacijaService>();
 builder.Services.AddScoped<ValidationService>();
 
 builder.Services.AddDbContext<ZdravstvoContext>(options =>

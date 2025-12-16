@@ -83,5 +83,12 @@ namespace Zdravstvo.Infrastructure.Service
             if (exists)
                 throw new ArgumentException("Unesena šifra uputnice već postoji");
        }
+
+        public async Task ValidateSpecijalizaciju(string naziv)
+        {
+            bool exists = await _db.Specijalizacija.AnyAsync(x => x.Naziv == naziv);
+            if (exists)
+                throw new ArgumentException("Unesena specijalizacija već postoji");
+        }
     }
 }
