@@ -11,5 +11,6 @@ namespace Zdravstvo.Core.Interfaces
     {
         Task<List<UputnicaDTO.ReadUputnicaDTO>> GetAllUputnice();
         Task<UputnicaDTO.ReadUputnicaDTO> GetUputnicaById(int id);
+        Task<List<UputnicaDTO.ReadUputnicaDTO>> GetUputniceForPacijent(int pacijentId);
         Task<UputnicaDTO.ReadUputnicaDTO> CreateUputnicaForTermin(int terminId, UputnicaDTO.CreateUputnicaDTO createUputnicaDTO, int requestingDoktor);  }
 }

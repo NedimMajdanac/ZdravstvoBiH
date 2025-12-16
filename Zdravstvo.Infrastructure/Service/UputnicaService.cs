@@ -79,5 +79,14 @@ namespace Zdravstvo.Infrastructure.Service
             await _db.SaveChangesAsync();
             return _mapper.Map<UputnicaDTO.ReadUputnicaDTO>(uputnica);
         }
+
+        // GET uputnice by PaicnetId
+        public async Task<List<UputnicaDTO.ReadUputnicaDTO>> GetUputniceForPacijent(int pacijentId)
+        {
+            var uputnice = await _db.Uputnice
+                .Where(u => u.PacijentId == pacijentId)
+                .ToListAsync();
+            return _mapper.Map<List<UputnicaDTO.ReadUputnicaDTO>>(uputnice);
+        }
     }
 }

@@ -42,6 +42,18 @@ namespace ZdravstvoBiH.API.Controllers
             var uputnica = await _uputnicaService.CreateUputnicaForTermin(terminId,createUputnicaDTO, doktor);
             return CreatedAtAction(nameof(GetUputnicaById), new { id = uputnica.Id }, uputnica);
         }
-
+        [HttpPost("pacijenti/{pacijentId}")]
+        public async Task<IActionResult> CreateUputnicaForPacijent(int pacijentId, [FromBody] UputnicaDTO.CreateUputnicaDTO createUputnicaDTO)
+        {
+            try
+            {
+                var uputnice = await _uputnicaService.GetUputniceForPacijent(pacijentId);
+                return Ok(uputnice);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
