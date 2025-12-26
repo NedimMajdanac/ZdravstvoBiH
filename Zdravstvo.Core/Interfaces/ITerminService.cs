@@ -9,7 +9,7 @@ namespace Zdravstvo.Core.Interfaces
 {
     public interface ITerminService
     {
-        Task<List<TerminDTO.ReadTerminDTO>> GetAllTermini();
+        Task<PagedResult<TerminDTO.ReadTerminDTO>> GetAllTermini(string search, PagingParams paging);
         Task<TerminDTO.ReadTerminDTO> GetTerminById(int id);
         Task<TerminDTO.ReadTerminDTO> CreateTermin(TerminDTO.CreateTerminDTO createTerminDTO);
         Task<TerminDTO.ReadTerminDTO> UpdateTermin(int id, TerminDTO.UpdateTerminDTO updateTerminDTO);

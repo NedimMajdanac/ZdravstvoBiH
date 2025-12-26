@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
+using System.Text.Json;
 
 namespace ZdravstvoBiH.API.Controllers
 {
@@ -15,10 +16,12 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTermini()
+        public async Task<IActionResult> GetAllTermini([FromQuery] string search, [FromQuery] PagingParams paging)
         {
-            var termini = await _terminService.GetAllTermini();
-            return Ok(termini);
+            var result = await _terminService.GetAllTermini(search, paging);
+            var meta = new { result.TotalCount, result.Page, result.PageSize, result.TotalPages };
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(meta));
+            return Ok(result.Items);
 
         }
 

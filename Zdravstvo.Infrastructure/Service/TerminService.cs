@@ -9,6 +9,7 @@ using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Entities;
 using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Data;
+using Zdravstvo.Infrastructure.Extensions;
 
 namespace Zdravstvo.Infrastructure.Service
 {
@@ -57,10 +58,26 @@ namespace Zdravstvo.Infrastructure.Service
        
 
 
-        public async Task<List<TerminDTO.ReadTerminDTO>> GetAllTermini()
+        public async Task<PagedResult<TerminDTO.ReadTerminDTO>> GetAllTermini(string search, PagingParams paging)
         {
-            var termini = await _db.Termini.ToListAsync();
-            return _mapper.Map<List<TerminDTO.ReadTerminDTO>>(termini);
+            var query = _db.Termini.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var s = search.Trim();
+                query = query.Where(t => t.Doktor.Ime.Contains(s) || t.Status.Contains(s));
+            }
+
+            var total = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(t => t.DatumVreme)
+                .ApplyPaging(paging)
+                .ToListAsync();
+
+            var mapped = _mapper.Map<List<TerminDTO.ReadTerminDTO>>(items);
+
+            return new PagedResult<TerminDTO.ReadTerminDTO>(mapped, total, paging.Page, paging.PageSize);
         }
 
         public async Task<TerminDTO.ReadTerminDTO> GetTerminById(int id)
