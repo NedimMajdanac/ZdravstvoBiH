@@ -76,6 +76,7 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         [HttpGet("pacijent/{pacijentId}")]
+        [Authorize(Roles = "Pacijent")]
         public async Task<IActionResult> GetPreglediLoggedPacijent(int pacijentId)
         {
             try
@@ -90,6 +91,7 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         [HttpGet("doktor/{doktorId}")]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> GetPreglediLoggedDoctor(int doktorId)
         {
             try

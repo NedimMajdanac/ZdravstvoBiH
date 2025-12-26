@@ -69,6 +69,7 @@ namespace ZdravstvoBiH.API.Controllers
             return Ok(updatedDijagnoza);
         }
 
+        // Logged pacijent can see their own dijagnoze
         [HttpGet("pacijent/{pacijentId}")]
         public async Task<IActionResult> GetDijagnozeByPacijentId(int pacijentId)
         {

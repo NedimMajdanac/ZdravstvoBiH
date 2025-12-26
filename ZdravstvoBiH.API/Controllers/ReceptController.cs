@@ -54,6 +54,7 @@ namespace ZdravstvoBiH.API.Controllers
             }
         }
         [HttpPut("{id}")]
+        [Authorize(Roles ="Doktor")]
         public async Task<IActionResult> UpdateRecept(int id, [FromBody] ReceptDTO.UpdateReceptDTO updateReceptDTO)
         {
             var recept = await _receptService.UpdateRecept(id, updateReceptDTO);

@@ -35,7 +35,7 @@ namespace ZdravstvoBiH.API.Controllers
         }
 
         [HttpPost("/{terminId}")]
-        [Authorize]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> CreateUputnica(int terminId, [FromBody] UputnicaDTO.CreateUputnicaDTO createUputnicaDTO)
         {
             var doktor = User.GetDoktorId();
@@ -43,6 +43,7 @@ namespace ZdravstvoBiH.API.Controllers
             return CreatedAtAction(nameof(GetUputnicaById), new { id = uputnica.Id }, uputnica);
         }
         [HttpPost("pacijenti/{pacijentId}")]
+        [Authorize(Roles = "Doktor")]
         public async Task<IActionResult> CreateUputnicaForPacijent(int pacijentId, [FromBody] UputnicaDTO.CreateUputnicaDTO createUputnicaDTO)
         {
             try

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using Zdravstvo.Core.DTOs;
 using Zdravstvo.Core.Interfaces;
-using System.Text.Json;
 
 namespace ZdravstvoBiH.API.Controllers
 {
