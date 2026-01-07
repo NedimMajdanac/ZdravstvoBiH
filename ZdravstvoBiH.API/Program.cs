@@ -9,7 +9,9 @@ using Zdravstvo.Core.Interfaces;
 using Zdravstvo.Infrastructure.Data;
 using Zdravstvo.Infrastructure.Service;
 using ZdravstvoBiH.API.Middleware;
-
+using Zdravstvo.Infrastructure.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -72,6 +74,8 @@ builder.Services.AddScoped<IReceptService,ReceptService>();
 builder.Services.AddScoped<ISpecijalizacijaService, SpecijelizacijaService>();
 builder.Services.AddScoped<ValidationService>();
 
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreatePacijentDTOValidator>();
 builder.Services.AddDbContext<ZdravstvoContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("Default"),
